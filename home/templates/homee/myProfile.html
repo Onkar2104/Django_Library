@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block start %}
+
+<style>
+    body {
+      
+      background-image: url('https://cdn.pixabay.com/photo/2017/08/07/03/22/books-2599241_1280.jpg');
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        background-image: none; /* Remove the background image on mobile */
+      }
+    }
+
+  .profile-photo {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border: 4px solid #fff; 
+}
+
+.profile-photo:hover{
+  cursor: pointer;
+}
+
+.profile-container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f8f9fa; 
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+#profilePhoto {
+  margin-top: 10px;
+}
+
+
+    .form-control:focus {
+      box-shadow: none;
+      border-color: #BA68C8;
+    }
+
+    .profile-button {
+      background-color: rgb(99, 39, 120);
+      border: none;
+      color: white;
+    }
+
+    .profile-button:hover {
+      background-color: #682773;
+    }
+
+    .branch-section {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar sticky-top navbar-expand-lg t bg-info bg-gradient">
+    <div class="container-fluid bg-info bg-gradient">
+        <div class="navbar-brand">
+            <img src="/static/photos/jspm.jpg" alt="Logo" width="50" height="50" class="d-inline-block align-text-top">
+        </div>
+        <a class="navbar-brand d-block text-center text-md-start" href="https://bitbarshi.edu.in/index.html">
+            <span class="d-none d-sm-inline fs-3">JSPM's Bhagwant Institute of Technology, Barshi</span>
+            <span class="d-inline d-sm-none fs-3">JSPM's BIT, Barshi</span>
+          </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href=" /"><i class="fa-solid fa-house"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/books/"><i class="fa-solid fa-book"></i> Library</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-address-card"></i> About Us</a>
+                </li>
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout/"><i class="fa-solid fa-right-from-bracket"></i> Logout </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Login
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/login/">Student</a></li>
+                            <li><a class="dropdown-item" href="/admin/">Librarian</a></li>
+                        </ul>
+                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register/">SignUp</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+  <div class="container profile-container bg-white p-4 rounded shadow">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% if messages %}
+      {{ message.tags }}
+      <div class="alert alert-primary" role="alert">   
+          {% for message in messages %}
+          {{ message }}
+          {% endfor %}
+      </div>
+       {% endif %}
+
+    <div class="row">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+      <div class="col-md-3 text-center">
+        <div class="d-flex flex-column align-items-center">
+          {% if student_image %}
+          <img src="/media/{{ student_image }}" class="profile-photo" id="profilePhotoPreview" alt="Profile Photo">
+          {% else %}
+          <img src="/media/user.jpg" alt="Default Profile Photo" class="profile-photo shadow-lg">
+            {% endif %}
+        </div>
+      </div>
+     
+      <div class="col-md-9">
+        <h4 class="mb-3">{{ first_name }} {{last_name}}</h4>
+
+
+       
+          <div class="mb-3">
+            <label for="fullName" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="fullName" placeholder="First_name Middle_name Surname" name="full_name" value="{{ full_name }}" readonly>
+          </div>
+
+         
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter your email" name="email" value="{{ email }}" readonly>
+        </div>
+        
+
+      
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" value="{{phone}}" name="phone" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Education Type</label>
+            <input class="form-control" value="{{education_type}}" name="education_type" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Branch</label>
+            <input class="form-control" value="{{select_branch}}" name="branch" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Pursuing Year</label>
+            <input class="form-control" value="{{pursuing_year}}" name="pursuing_year" readonly>
+          </div>
+          
+          <div class="text-center">
+            <a href="/books/" class="btn btn-light">Back</a>
+            <a href="/profile/" class="btn btn-success">Edit Profile</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  
+    function previewProfilePhoto(event) {
+      const reader = new FileReader();
+      reader.onload = function(){
+        const output = document.getElementById('profilePhotoPreview');
+        output.src = reader.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+    
+    const diplomaBranches = ['ENTC', 'Civil', 'Mechanical'];
+    const degreeBranches = ['Computer', 'ENTC', 'Civil', 'Mechanical'];
+
+  
+    function toggleBranches() {
+      const branchSelect = document.getElementById('branch');
+      const diplomaChecked = document.getElementById('diploma').checked;
+      const degreeChecked = document.getElementById('degree').checked;
+      const branchSection = document.getElementById('branchSection');
+
+      
+      branchSelect.innerHTML = '<option value="" disabled selected>Select branch</option>';
+
+      let branches = [];
+      if (diplomaChecked) {
+        branches = diplomaBranches;
+      } else if (degreeChecked) {
+        branches = degreeBranches;
+      }
+
+    
+      branches.forEach(branch => {
+        const option = document.createElement('option');
+        option.value = branch.toLowerCase();
+        option.text = branch;
+        branchSelect.appendChild(option);
+      });
+
+
+      branchSection.style.display = 'block';
+    }
+  </script>
+</body>
+
+{% endblock %}

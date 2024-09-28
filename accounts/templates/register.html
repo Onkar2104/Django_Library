@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block start %}
+
+    <style>
+        body {
+            background-image: url('https://cdn.pixabay.com/photo/2017/08/07/03/22/books-2599241_1280.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .register-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .registration-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-text a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .form-text a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="registration-title">Library Login</div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if messages %}
+            {{ message.tags }}
+            <div class="alert alert-primary" role="alert">   
+                {% for message in messages %}
+                {{ message }}
+                {% endfor %}
+            </div>
+             {% endif %}
+
+                <div class="mb-3">
+                    <label class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="first_name" placeholder="First Name" name="first_name" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="last_name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password" name="password" required>
+                </div>
+                <div class="mb-3">
+                    <label for="confirm-password" class="form-label">Confirm Password</label>
+                    <input type="confirm-password" class="form-control" id="confirm-password" placeholder="Confirm your password" name="confirm_password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Register</button>
+                <div class="mt-3 text-center">
+                    <span class="form-text">Already have an account? <a href="/login/">Login</a></span>
+                </div>
+        </form>
+    </div>
+
+    {% endblock %}
+

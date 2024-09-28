@@ -1,0 +1,147 @@
+
+{% extends "base.html" %}
+
+{% block start %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'style.css' %}">
+
+        <nav class="navbar sticky-top navbar-expand-lg t bg-info bg-gradient">
+            <div class="container-fluid bg-info bg-gradient">
+                <div class="navbar-brand">
+                    <img src="static/photos/jspm.jpg" alt="Logo" width="50" height="50" class="d-inline-block align-text-top">
+                </div>
+                <a class="navbar-brand d-block text-center text-md-start" href="https://bitbarshi.edu.in/index.html">
+                    <span class="d-none d-sm-inline fs-3">JSPM's Bhagwant Institute of Technology, Barshi</span>
+                    <span class="d-inline d-sm-none fs-3">JSPM's BIT, Barshi</span>
+                  </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="https://bitbarshi.edu.in/index.html"><i class="fa-solid fa-house"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/books/"><i class="fa-solid fa-book"></i> Library</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-address-card"></i> About Us</a>
+                        </li>
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout/"><i class="fa-solid fa-right-from-bracket"></i> Logout </a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Login
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="/login/">Student</a></li>
+                                    <li><a class="dropdown-item" href="/admin/">Librarian</a></li>
+                                </ul>
+                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register/">SignUp</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    
+        <div class="container mt-5 text-center">
+            <h1 class="h1 text-primary-emphasis">Welcome to the Library</h1> 
+        </div>
+
+        <div class="content">
+            <p>"Books are, let's face it, better than everything else. If we played Cultural Fantasy Boxing League, and made books go fifteen rounds in the ring against the best that any other art form had to offer, then books would win pretty much every time."</p><p id="nnn"> – Nick Hornby.</p>
+        </div>
+        <div class="container text-center ">
+            <img src="static/photos/jspm.jpg" class="img-thumbnail" alt="jspm_bit_barshi_">
+        </div> 
+        <div class="info">
+            <p>
+                <a id="info1" href=" /books/">6 Branches</a>
+                <a id="info2" href="/books/">500 Books</a>
+            </p>
+        </div>
+
+        <div class="infoo">
+           <h2>Library Working Hours</h2>
+        </div>
+        <div class="infoo2">
+           <P>Reading Hall Timing: <span>10:00 AM To 5:00 PM</span><br>
+             During Examination: <span>24x7 for all students</span></P>
+        </div>
+
+
+    <div class="mt-3 bg-light">
+        <div class=" row">
+            <!-- Library Stack Room -->
+            <div class="container col-md-4">
+                <h2 class="text-center"><i class="fa-solid fa-book"></i> Library Stack Room</h2>
+                <img src="static/photos/library-stack-room.jpg" alt="Library Stack Room" class="img-thumbnail"> 
+            </div>
+            <!-- Reading Room-I -->
+            <div class="col-md-4">
+                <h2 class="text-center"><i class="fa-solid fa-book-open"></i> Reading Room</h2>
+                <img src="static/photos/reading-room.jpg" alt="Reading Room-I" class="img-thumbnail">
+            </div>
+            <!-- Digital Library -->
+            <div class="col-md-4">
+                <h2 class="text-center"><i class="fa-solid fa-computer"></i> Digital Library</h2>
+                <img src="static/photos/digital-library.jpg" alt="Digital Library" class="img-thumbnail">
+            </div>
+        </div>
+    </div>
+    
+    <div class="img2">
+        <img src="static/photos/footer-img.png">
+    </div>
+    <footer>
+        <div class="foot-panel">
+            <ul>
+                <p class="foot">BIT, BARSHI</p>
+                <p>
+                    <i id="fot" class="fa-solid fa-house"></i>
+                    <a id="foot-home" href="https://bitbarshi.edu.in/index.html">HOME</a></p>
+                <p>
+                    <i class="fa-solid fa-location-dot"></i>
+                    <a href="https://www.google.com/maps/place/JSPM's+Bhagwant+Institute+Of+Technology,+Barshi/@18.2636689,75.6934489,17z/data=!3m1!4b1!4m6!3m5!1s0x3bc4555f56165729:0x693d79bac2acdaa2!8m2!3d18.2636689!4d75.6960238!16s%2Fg%2F11c44ybjyd?entry=ttu">Bhagwant Institute of Technology, Barshi<br>
+                    Gate No.1242, Tadsaundane Road, <br>Latur-Kurduwadi Bypass, Barshi.<br>
+                    Pincode :- 413411</a></p>
+                <p> <i class="fa-solid fa-phone"></i>
+                    <a href="tel:9420734956">123-909090</a> </p>
+                <p> <i class="fa-solid fa-envelope"></i>
+                    <a href="mailto:admissions@bitbarshi.edu.in">admissions@bitbarshi.edu.in</a></p>
+            </ul>
+
+            <ul>
+                <p class="foot">Quick Links</p>
+                <p><a href="https://bamua.digitaluniversity.ac/">Dr. BAMU</a></p>
+                <p><a href="https://dbatu.ac.in/">Dr.Batu</a> </p>
+                <p><a href="https://www.aicte-india.org/">AICTE</a> </p>
+                <p><a href="https://www.dte.org.in/">DTE</a> </p>
+                <p><a href="https://smallseotools.com/plagiarism-checker/">Code of Ethics (Plagiarism Check)</a> </p>
+            </ul>
+
+            <ul>
+                <p class="foot">Social Media</p>
+                <p><i class="fa-brands fa-instagram"></i>
+                   <a href="https://www.instagram.com/jspm_bit_barshi_/">Instagram.com</a> </p>
+                <p><i class="fa-brands fa-facebook"></i>
+                   <a href="https://m.facebook.com/profile.php/?id=100011824980540&name=xhp_nt__fb__action__open_user">Facebook.com</a> </p>
+                <p><i class="fa-brands fa-youtube"></i>
+                   <a href="https://www.youtube.com/watch?v=mo_KXfpBzcs">YouTube.com</a> </p>
+            </ul>
+        </div>
+        <div class="text-center p-3 bg-dark text-white">
+            © 2024 JSPM's Bhagwant Institute of Technology, Barshi
+        </div>
+    </footer>
+    <!-- <script src="script.js"></script> -->
+
+
+{% endblock %}
