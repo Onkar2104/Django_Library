@@ -33,11 +33,12 @@
                         <li class="nav-item">
                             <a class="nav-link active" href="/admin/"><i class="fas fa-user-tie"></i> Admin</a>
                         </li>
-                        {% else %}
+                        {% elif request.user.is_authenticated and not request.user.is_superuser %}
                         <li class="nav-item">
-                            <a class="nav-link active" href="/myprofile/"><i class="fas fa-user"></i>  My Profile</a>
+                            <a class="nav-link active" href="/myprofile/"><i class="fas fa-user"></i> My Profile</a>
                         </li>
                         {% endif %}
+                        
 
                         {% if request.user.is_authenticated %}
                             <li class="nav-item">
