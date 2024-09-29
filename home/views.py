@@ -233,4 +233,15 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     subject_template_name = 'password_reset_subject.txt'
     success_message = "if an account exists with the email you entered. You should receive them shortly." \
     
-    success_url = reverse_lazy('login_page')
+    def get_success_url(self):
+        if self.request.user.is_authenticated:
+            return reverse_lazy('my_profile')
+        else:
+            return reverse_lazy('login_page')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            context['email'] = user.email
+        return context
