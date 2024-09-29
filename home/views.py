@@ -49,25 +49,35 @@ def books(request):
 
     return render(request, 'homee/BookSec.html', context)
 
+
 def login_page(request):
-        if request.method == "POST":
-            email = request.POST.get('email')
-            password = request.POST.get('password')
+    if request.method == "POST":
+        email = request.POST.get('email').lower()
+        password = request.POST.get('password')
 
-            if not User.objects.filter(email = email).exists():
-                messages.info(request, "Invalid email..!")
-                return redirect('/login/')
-            
-            user = authenticate(email = email, password = password)
+        if not User.objects.filter(email=email).exists():
+            messages.info(request, "Invalid email..!")
+            return redirect('/login/')
 
-            if user is None:
-                messages.info(request, "Invalid passward..!")
-                return redirect('/login/')
-            else:
-                login(request, user)
-                return redirect('/')
+        user = authenticate(username=email, password=password)
 
-        return render(request, 'login_page.html')
+        if user is None:
+            messages.info(request, "Invalid password..!")
+            return redirect('/login/')
+        else:
+            login(request, user)
+
+            try:
+                profile = StudentProfile.objects.get(user=user)
+                if profile.full_name:
+                    return redirect('/')
+                else:
+                    return redirect('/profile/')
+            except StudentProfile.DoesNotExist:
+                messages.error(request, "Student profile does not exist.")
+                return redirect('/profile/') 
+
+    return render(request, 'login_page.html')
 
 def logout_page(request):
     logout(request)
@@ -79,7 +89,7 @@ def register(request):
     if request.method == "POST":
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
+        email = request.POST.get('email').lower()
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
