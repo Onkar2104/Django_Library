@@ -86,6 +86,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-address-card"></i> About Us</a>
                 </li>
+
+                {% if request.user.is_authenticated and request.user.is_superuser %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/admin/"><i class="fa-solid fa-user-tie"></i> Admin</a>
+              </li>
+              {% endif %}
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="/logout/"><i class="fa-solid fa-right-from-bracket"></i> Logout </a>
@@ -139,7 +145,7 @@
         <h4 class="mb-3">{{ first_name }} {{last_name}}</h4>
 
 
-       
+       {% if request.user.is_authenticated and request.user.is_superuser%}
           <div class="mb-3">
             <label for="fullName" class="form-label">Full Name</label>
             <input type="text" class="form-control" id="fullName" placeholder="First_name Middle_name Surname" name="full_name" value="{{ full_name }}" readonly>
@@ -152,6 +158,24 @@
         </div>
         
 
+      
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" value="{{phone}}" name="phone" readonly>
+          </div>
+
+          {% else %}
+
+          <div class="mb-3">
+            <label for="fullName" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="fullName" placeholder="First_name Middle_name Surname" name="full_name" value="{{ full_name }}" readonly>
+          </div>
+
+         
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter your email" name="email" value="{{ email }}" readonly>
+        </div>
       
           <div class="mb-3">
             <label for="phone" class="form-label">Phone Number</label>
@@ -172,10 +196,12 @@
             <label class="form-label">Pursuing Year</label>
             <input class="form-control" value="{{pursuing_year}}" name="pursuing_year" readonly>
           </div>
+
+          {% endif %}
           
           <div class="text-center">
             <a href="/books/" class="btn btn-light">Back</a>
-            <a href="/profile/" class="btn btn-success">Edit Profile</a>
+            <a href="/profile/" class="btn btn-primary">Edit Profile</a>
           </div>
         </form>
       </div>

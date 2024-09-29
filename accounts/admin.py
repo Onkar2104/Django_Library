@@ -5,7 +5,7 @@ from .models import User
 from .forms import UserAdminCreationForm, UserAdminChangeForm
 
 class UserAdmin(BaseUserAdmin):
-    search_fields = ['email']
+    search_fields = ['email', 'first_name', 'last_name']
     form = UserAdminChangeForm 
     add_form = UserAdminCreationForm 
 

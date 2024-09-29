@@ -23,14 +23,25 @@
                             <a class="nav-link active" aria-current="page" href="https://bitbarshi.edu.in/index.html"><i class="fa-solid fa-house"></i> Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/books/"><i class="fa-solid fa-book"></i> Library</a>
+                            <a class="nav-link active" href="/books/"><i class="fa-solid fa-book"></i> Library</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-address-card"></i> About Us</a>
+                            <a class="nav-link active" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-address-card"></i> About Us</a>
                         </li>
+
+                        {% if request.user.is_authenticated and request.user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/admin/"><i class="fas fa-user-tie"></i> Admin</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/myprofile/"><i class="fas fa-user"></i>  My Profile</a>
+                        </li>
+                        {% endif %}
+
                         {% if request.user.is_authenticated %}
                             <li class="nav-item">
-                                <a class="nav-link" href="/logout/"><i class="fa-solid fa-right-from-bracket"></i> Logout </a>
+                                <a class="nav-link active" href="/logout/"><i class="fa-solid fa-right-from-bracket"></i> Logout </a>
                             </li>
                         {% else %}
                             <li class="nav-item dropdown">
@@ -38,8 +49,8 @@
                                     Login
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="/login/">Student</a></li>
-                                    <li><a class="dropdown-item" href="/admin/">Librarian</a></li>
+                                    <li><a class="dropdown-item" href="/login/"><i class="fa-solid fa-user-graduate"></i> Student</a></li>
+                                    <li><a class="dropdown-item" href="/admin/"><i class="fa-solid fa-user-tie"></i> Admin</a></li>
                                 </ul>
                             </li>
                         <li class="nav-item">
