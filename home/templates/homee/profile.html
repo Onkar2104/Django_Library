@@ -102,6 +102,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-address-card"></i> About Us</a>
                 </li>
+
+                {% if request.user.is_authenticated and request.user.is_superuser %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/admin/"><i class="fa-solid fa-user-tie"></i> Admin</a>
+              </li>
+              {% endif %}
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="/logout/"><i class="fa-solid fa-right-from-bracket"></i> Logout </a>
@@ -157,7 +163,24 @@
         <h4 class="mb-3">{{ first_name }} {{last_name}}</h4>
 
 
-       
+       {% if request.user.is_authenticated and request.user.is_superuser %}
+          <div class="mb-3">
+            <label for="fullName" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="fullName" placeholder="First_name Middle_name Surname" name="full_name" value="{{ full_name }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter your email" name="email" value="{{ email }}" readonly>
+        </div>
+      
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" value="{{phone}}" name="phone" required>
+          </div>
+
+          {% else %}
+
           <div class="mb-3">
             <label for="fullName" class="form-label">Full Name</label>
             <input type="text" class="form-control" id="fullName" placeholder="First_name Middle_name Surname" name="full_name" value="{{ full_name }}" required>
@@ -179,6 +202,7 @@
               <input class="form-check-input" type="radio" name="education_type" id="diploma" value="diploma" onclick="toggleBranches()">
               <label class="form-check-label" for="diploma">Diploma</label>
             </div>
+
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="education_type" id="degree" value="degree" onclick="toggleBranches()">
               <label class="form-check-label" for="degree">Degree</label>
@@ -197,6 +221,7 @@
             <input type="number" class="form-control" id="pursuingYear" min="1" max="4" name="pursuing_year" 
             value="{{ profile.pursuing_year }}" required>
           </div>
+          {% endif %}
           
           <div class="text-center">
             <a href="/myprofile/" class="btn btn-light">Back</a>

@@ -137,15 +137,20 @@ def student_info(request):
     profile, created = StudentProfile.objects.get_or_create(user=user)
 
     if request.method == "POST":
-        profile.full_name = request.POST.get('full_name')
-        profile.student_image = request.FILES.get('student_image') if request.FILES.get('student_image') else profile.student_image
-        profile.phone = request.POST.get('phone')
-        profile.education_type = request.POST.get('education_type')
-        profile.select_branch = request.POST.get('select_branch')
-        pursuing_year = request.POST.get('pursuing_year')
-        if pursuing_year:
-            profile.pursuing_year = int(pursuing_year)
-        profile.books_obtained = request.POST.get('books_obtained') or ''
+        if request.user.is_authenticated and request.user.is_superuser:
+            profile.full_name = request.POST.get('full_name')
+            profile.student_image = request.FILES.get('student_image') if request.FILES.get('student_image') else profile.student_image
+            profile.phone = request.POST.get('phone')
+        else: 
+            profile.full_name = request.POST.get('full_name')
+            profile.student_image = request.FILES.get('student_image') if request.FILES.get('student_image') else profile.student_image
+            profile.phone = request.POST.get('phone')
+            profile.education_type = request.POST.get('education_type')
+            profile.select_branch = request.POST.get('select_branch')
+            pursuing_year = request.POST.get('pursuing_year')
+            if pursuing_year:
+                profile.pursuing_year = int(pursuing_year)
+            profile.books_obtained = request.POST.get('books_obtained') or ''
         
         profile.save()
 
