@@ -94,10 +94,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href=" /"><i class="fa-solid fa-house"></i> Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/books/"><i class="fa-solid fa-book"></i> Library</a>
+                    <a class="nav-link active" aria-current="page" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-house"></i> Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-address-card"></i> About Us</a>
@@ -155,7 +152,11 @@
           <img src="/media/user.jpg" alt="Default Profile Photo" class="profile-photo shadow-lg">
             {% endif %}
           <label for="profilePhoto" class="form-label mt-2">Change Profile Photo</label>
+          {% if student_image%}
           <input type="file" class="form-control" id="profilePhoto" name="student_image" onchange="previewProfilePhoto(event)">
+          {% else %}
+          <input type="file" class="form-control" id="profilePhoto" name="student_image" onchange="previewProfilePhoto(event)" required>
+          {% endif %}
         </div>
       </div>
       
@@ -176,7 +177,7 @@
       
           <div class="mb-3">
             <label for="phone" class="form-label">Phone Number</label>
-            <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" value="{{phone}}" name="phone" required>
+            <input type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" class="form-control" id="phone" placeholder="Enter your phone number" value="{{phone}}" name="phone" required>
           </div>
 
           {% else %}
@@ -193,7 +194,7 @@
       
           <div class="mb-3">
             <label for="phone" class="form-label">Phone Number</label>
-            <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" value="{{phone}}" name="phone" required>
+            <input type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" class="form-control" id="phone" placeholder="Enter your phone number" value="{{phone}}" name="phone" required>
           </div>
 
           <div class="mb-3">
@@ -224,9 +225,13 @@
           {% endif %}
           
           <div class="text-center">
+            {% if full_name %}
             <a href="/myprofile/" class="btn btn-light">Back</a>
             <!-- <a href="/myprofile/" class="btn btn-primary">Update</a> -->
             <button type="submit" class="btn btn-success">Update</button>
+            {% else %}
+            <button type="submit" class="btn btn-success">Update</button>
+            {% endif %}
           </div>
         </form>
       </div>
