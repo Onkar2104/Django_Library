@@ -137,6 +137,7 @@
     }
 </style>
 <input type="hidden" id="user-first-name" value="{{ first_name }}">
+<input type="hidden" id="user-email" value="{{ user.email }}">
 <script>
   
   function displayDateAndGreeting() {
@@ -158,7 +159,9 @@
             }
 
             const firstName = document.getElementById('user-first-name').value;
-            document.getElementById("greeting").innerHTML = `${greeting}, ${firstName}`;
+            const email = document.getElementById('user-email').value;
+            const displayName = firstName || email || "Guest"; 
+            document.getElementById("greeting").innerHTML = `${greeting}, ${displayName}`;
         }
 
   function updateTime() {
@@ -227,13 +230,15 @@
       </a>
   </p>
   {% else %}
-        <p class="text-center fs-3">{{ first_name }} {{ last_name }} 
+        <p class="text-center fs-3">{{ user.email }}
           <a href="/logout/" class="btn btn-outline-light btn-sm log">
               <i class="fa-solid fa-right-from-bracket"></i>
           </a>
       </p>
       {% endif %}
       </form> 
+
+
         
 
         <div class="offcanvas-body">
@@ -305,6 +310,60 @@
     <div class="container-fluid mt-5">
       <p class="date" id="date"></p>
       <p class="greeting" id="greeting"></p>
+      {% if messages %}
+      <div id="alert-message" class="alert alert-primary" role="alert">
+          {% for message in messages %}
+              <span>{{ message }}</span>
+              <button type="button" class="close" aria-label="Close" onclick="removeMessage()">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          {% endfor %}
+      </div>
+      {% endif %}
+      {% if request.user.is_authenticated and request.user.is_superuser %}
+      <div class="mb-5">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Add Books
+          </button>
+      </div>
+      {% endif %}
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add New Book/Journal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+              <label for="bookTitle">Title</label>
+              <input type="text" class="form-control" id="bookTitle" name="title" required>
+          </div>
+          <div class="form-group">
+              <label for="bookAuthor">Author</label>
+              <input type="text" class="form-control" id="bookAuthor" name="author" required>
+          </div>
+          <div class="form-group">
+              <label for="totalCopies">Total Copies</label>
+              <input type="number" class="form-control" id="totalCopies" name="total_copies" required>
+          </div>
+          <div class="form-group">
+              <label for="bookImage">Book Image</label>
+              <input type="file" class="form-control-file" id="bookImage" name="book_image" required>
+          </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" name="add_book" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </form>
+  </div>
+</div>
 
       <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
@@ -336,18 +395,47 @@
       </div>
 
     <div class="row">
-        <h3>Books <i class="fa-solid fa-book-open"></i></h3>
+      <h3>Books <i class="fa-solid fa-book-open"></i></h3>
 
-        <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+      {% for book in books %}
+      <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
           <div class="card card-custom shadow-lg" style="width: 12rem;">
-            <img src="{% static 'photos/M1.jpg' %}" class="card-img-top" alt="..." style="height: 280px; width: 100%; object-fit: contain;">
-            <div class="card-body border-top border-primary">
-              <h5 class="card-title">Engineering Mathematics</h5>
-              <p class="card-text">Author- S.CHAND</p>
-              <button type="submit" class="btn btn-success">Add to Cart</button>
-            </div>
+              <img src="{{ book.book_image.url }}" class="card-img-top" alt="{{ book.title }}" style="height: 280px; width: 100%; object-fit: contain;">
+              <div class="card-body border-top border-primary">
+                  <h5 class="card-title">{{ book.title }}</h5>
+                  <p class="card-text">{{ book.author }}</p>
+      
+                  {% if book.is_available %}
+                  <form method="post" action="{% url 'books_with_id' book.id %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="book_id" value="{{ book.id }}">
+                      <button type="submit" name="borrow" class="btn btn-success">Add to Cart</button>
+                  </form>
+                  {% else %}
+                      {% if request.user.is_authenticated and book.id in borrowed_book_ids %}
+                          {% with book.borrow_set.first as borrow_record %}
+                              {% if borrow_record and borrow_record.calculate_fine > 0 %}
+                                  <button class="btn btn-danger" disabled>Pay Fine First</button>
+                              {% else %}
+                                  <form method="post" action="{% url 'books_with_id' book.id %}">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="book_id" value="{{ book.id }}">
+                                      <button type="submit" name="return" class="btn btn-warning">Return Book</button>
+                                  </form>
+                              {% endif %}
+                          {% endwith %}
+                      {% else %}
+                          <button class="btn btn-primary">Out of Stock</button>
+                      {% endif %}
+                  {% endif %}
+              </div>
           </div>
-        </div>
+      </div>
+      {% endfor %}
+      
+      
+      
+      
 
         <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
           <div class="card card-custom shadow-lg" style="width: 12rem;">
@@ -511,7 +599,7 @@
         </a>
       </div>
     </div>
-    
+
     <!-- Custom CSS -->
     <style>
       /* Smooth sliding effect */
@@ -558,7 +646,11 @@
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
@@ -578,6 +670,18 @@
         }]
       }
     });
+
+    function removeMessage() {
+        const alertMessage = document.getElementById('alert-message');
+        if (alertMessage) {
+            alertMessage.remove(); // Completely removes the message from the DOM
+        }
+    }
+
+    // Automatically remove the message after a specific time (e.g., 5 seconds)
+    setTimeout(function() {
+        removeMessage();
+    }, 5000);
 
   </script>
     {% endblock %}

@@ -1,16 +1,15 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth import get_user_model
 from .models import *
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import StudentProfile
+from django.utils import timezone
 
 # Create your views here.
 
@@ -21,7 +20,7 @@ def home_page(request):
     return render(request, 'homee/index.html', context)
 
 @login_required(login_url="/login/")
-def books(request):
+def books(request, book_id=None):
     if request.user.is_authenticated:
         user = request.user
         first_name = user.first_name
@@ -40,15 +39,85 @@ def books(request):
         full_name = "Guest User"
         student_image = None
 
+        # Get list of IDs of books borrowed by the user
+    borrowed_book_ids = Borrow.objects.filter(user=request.user).values_list('book_id', flat=True) if request.user.is_authenticated else []
+
+    overdue_books = Borrow.objects.filter(user=request.user, returned_date__isnull=True)
+    overdue_ids = [
+        borrow.id for borrow in overdue_books if borrow.calculate_fine() > 0
+    ]
+
+    if request.method == "POST":
+        if 'add_book' in request.POST:
+            title = request.POST.get('title')
+            author = request.POST.get('author')
+            total_copies = int(request.POST.get('total_copies', 0)) 
+            book_image = request.FILES.get('book_image')  
+
+            if not title or not author or total_copies <= 0:
+                messages.error(request, "All fields are required.")
+                return redirect('books')
+            
+            book = Book(
+                title=title, 
+                author=author, 
+                total_copies=total_copies, 
+                available_copies=total_copies, 
+                book_image=book_image
+            )
+            try:
+                book.save()
+            except Exception as e:
+                messages.error(request, f"Error saving book: {str(e)}")
+
+            messages.success(request, f'Book "{title}" added successfully!')
+            return redirect('books')
+
+        if book_id is not None:
+            book = get_object_or_404(Book, id=book_id)
+
+            if 'borrow' in request.POST:
+                if book.is_available():
+                    Borrow.objects.create(user=request.user, book=book, borrowed_date=timezone.now())
+                    book.available_copies -= 1
+                    book.borrowed_by.add(request.user)
+                    book.save()
+
+                    messages.success(request, f'You’ve successfully borrowed "{book.title}". 📚')
+                else:
+                    messages.error(request, "Oops, this book is not available right now.")
+
+            elif 'return' in request.POST:
+                borrow_record = Borrow.objects.filter(user=request.user, book=book, returned_date__isnull=True).first()
+                if borrow_record:
+                    fine = borrow_record.calculate_fine()
+                    borrow_record.returned_date = timezone.now()
+                    borrow_record.save()
+
+                    book.available_copies += 1
+                    book.borrowed_by.remove(request.user)
+                    book.save()
+
+                    if fine > 0:
+                        messages.error(request, f"You’re late! Pay {fine} rupees for the overdue days. 💸")
+                    else:
+                        messages.success(request, f'Thanks for returning "{book.title}" on time! 👏')
+                else:
+                    messages.error(request, "You can’t return a book you haven’t borrowed, silly! 😜")
+
+    books_list = Book.objects.all()
+
     context = {
         'first_name': first_name,
         'last_name': last_name,
         'full_name': full_name,
-        'student_image': student_image
+        'student_image': student_image,
+        'books': books_list,
+        'borrowed_book_ids': borrowed_book_ids,
+        'overdue_ids': overdue_ids,
     }
 
     return render(request, 'homee/BookSec.html', context)
-
 
 def login_page(request):
     if request.method == "POST":
@@ -104,7 +173,7 @@ def register(request):
         try:
             validate_password(password)
         except ValidationError as e:
-            messages.error(request, "Password does not meet the requirements: " + "; ".join(e.messages))
+            messages.error(request, "" + "; ".join(e.messages))
             return redirect('/register/')
 
         if User.objects.filter(email=email).exists():
