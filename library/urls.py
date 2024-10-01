@@ -25,6 +25,8 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     # path('', index_page, name="index_page"),
     path('', home_page, name="home_page"),
+    path('books/<int:book_id>/', books, name='books_with_id'),
+    path('books/pay_fine/', books, name='pay_fine'),
     path('books/', books, name="books"),
     path('login/', login_page, name="login_page"),
     path('register/', register, name="register"),

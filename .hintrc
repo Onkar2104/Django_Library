@@ -35,6 +35,7 @@
         "link-name": "off",
         "button-name": "off"
       }
-    ]
+    ],
+    "button-type": "off"
   }
 }
