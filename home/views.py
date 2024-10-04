@@ -98,6 +98,13 @@ def books(request, book_id=None):
             profile = StudentProfile.objects.get(user=user)
             full_name = profile.full_name
             student_image = profile.student_image
+            gender = profile.gender
+
+            if gender == 'male':
+                default_avatar = settings.STATIC_URL + 'photos/boy.avif'
+            else:
+                default_avatar = settings.STATIC_URL + 'photos/girl.avif'
+
         except StudentProfile.DoesNotExist:
             full_name = f"{first_name} {last_name}"
             student_image = None
@@ -182,6 +189,8 @@ def books(request, book_id=None):
         'last_name': last_name,
         'full_name': full_name,
         'student_image': student_image,
+        'default_avatar': default_avatar,
+        'gender': gender,
         'books': books_list,
         'borrowed_book_ids': borrowed_book_ids,
         'borrowed_books_status': borrowed_books_status,
@@ -294,10 +303,12 @@ def student_info(request):
             profile.full_name = request.POST.get('full_name')
             profile.student_image = request.FILES.get('student_image') if request.FILES.get('student_image') else profile.student_image
             profile.phone = request.POST.get('phone')
+            profile.gender = request.POST.get('gender')
         else: 
             profile.full_name = request.POST.get('full_name')
             profile.student_image = request.FILES.get('student_image') if request.FILES.get('student_image') else profile.student_image
             profile.phone = request.POST.get('phone')
+            profile.gender = request.POST.get('gender')
             profile.education_type = request.POST.get('education_type')
             profile.select_branch = request.POST.get('select_branch')
             pursuing_year = request.POST.get('pursuing_year')
@@ -316,6 +327,7 @@ def student_info(request):
         'full_name': profile.full_name,
         'email': user.email,
         'phone': profile.phone,
+        'gender':profile.gender,
         'education_type': profile.education_type,
         'select_branch': profile.select_branch,
         'pursuing_year': profile.pursuing_year,
@@ -336,6 +348,7 @@ def my_profile(request):
         email = request.user.email
         full_name = profile.full_name
         phone = profile.phone
+        gender = profile.gender
         education_type = profile.education_type
         branch = profile.select_branch
         pursuing_year = profile.pursuing_year
@@ -348,6 +361,7 @@ def my_profile(request):
         email = request.user.email
         full_name = ""
         phone = ""
+        gender = ""
         education_type = ""
         branch = ""
         pursuing_year = ""
@@ -359,6 +373,7 @@ def my_profile(request):
         'email': email,
         'full_name': full_name,
         'phone': phone,
+        'gender': gender,
         'education_type': education_type,
         'select_branch': branch,
         'pursuing_year': pursuing_year,

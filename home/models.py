@@ -8,12 +8,20 @@ User = get_user_model()
 # Create your models here.
 
 class StudentProfile(models.Model):
+
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('other', 'Other'),
+    ]
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     first_name = User.first_name
     last_name = User.last_name
     full_name = models.CharField(max_length=35, blank=True, default='')
     student_image = models.ImageField(upload_to='student_info/', default=None)
     phone = models.CharField(max_length=12)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     education_type = models.CharField(max_length=10)
     select_branch = models.CharField(max_length=30, null=True, blank=True)
     pursuing_year = models.IntegerField(null=False, blank=False, default='1')
