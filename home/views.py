@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
@@ -10,6 +11,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils import timezone
+import requests
 
 # Create your views here.
 
@@ -19,8 +21,74 @@ def home_page(request):
     context={'page':'BIT'}
     return render(request, 'homee/index.html', context)
 
+def fetch_news(source=None, language='en'):
+    api_key = 'NTIr1l-Avuroc_hwjRbiZgDNIpKLKmJCbw_EloVxa9BGk_jS'  # Replace with your valid Currents API key
+    base_url = 'https://api.currentsapi.services/v1/latest-news?'
+
+    # Construct the API URL based on the provided source
+    if source:
+        url = f'{base_url}domain={source}&apiKey={api_key}'
+    else:
+        url = f'{base_url}language={language}&apiKey={api_key}'
+
+    print(f"Fetching news from: {url}")  # Debug log
+
+    response = requests.get(url)
+    print(f"API Response Code: {response.status_code}")  # Debug log
+    print(f"API Response Content: {response.content}")  # Debug log
+
+    if response.status_code == 200:
+        news_data = response.json()
+        print("Raw news data:", news_data)  # Debug log
+
+        if 'news' in news_data:
+            return news_data['news']  # Return list of news articles
+        else:
+            print("No 'news' key in the response.")  # Debug log
+            return []
+    else:
+        print("Failed to fetch news:", response.status_code, response.content)
+        return []
+
+    
+
+
 @login_required(login_url="/login/")
 def books(request, book_id=None):
+
+    newspapers = [
+        {
+            'name': 'Times of India',
+            'image_url': '/static/photos/times_of_india.png',  # Add a valid image path here
+            'domain': 'timesofindia.indiatimes.com'
+        },
+        {
+            'name': 'Loksatta',
+            'image_url': '/static/photos/loksatta.png',  # Add a valid image path here
+            'domain': 'loksatta.com'
+        },
+        {
+            'name': 'The Indian Express',
+            'image_url': '/static/photos/indian_express.png',  # Add a valid image path here
+            'domain': 'navbharattimes.indiatimes.com'
+        },
+    ]
+
+    # Initialize selected_newspaper to None by default
+    selected_newspaper = None  
+    news_articles = []
+
+    if request.method == "GET":
+        selected_newspaper = request.GET.get('newspaper', None)
+
+        # Fetch news from the selected newspaper if it is provided
+        news_articles = fetch_news(source=selected_newspaper) if selected_newspaper else []
+
+        # Check if the request is an AJAX request
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'news_articles': news_articles})
+
+
     if request.user.is_authenticated:
         user = request.user
         first_name = user.first_name
@@ -104,6 +172,7 @@ def books(request, book_id=None):
                         messages.success(request, f'Thanks for returning "{book.title}" on time! 👏')
                 else:
                     messages.error(request, "You can’t return a book you haven’t borrowed, silly! 😜")
+        
 
     books_list = Book.objects.all()
 
@@ -115,6 +184,9 @@ def books(request, book_id=None):
         'books': books_list,
         'borrowed_book_ids': borrowed_book_ids,
         'overdue_ids': overdue_ids,
+        'newspapers': newspapers,
+        'selected_newspaper': selected_newspaper,
+        'news_articles': news_articles,
     }
 
     return render(request, 'homee/BookSec.html', context)
