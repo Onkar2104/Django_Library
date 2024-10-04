@@ -224,9 +224,10 @@
       <div class="container d-flex justify-content-center align-items-center my-4">
         <div class="profile-photo-container text-center">
             {% if student_image %}
-                <img src="/media/{{ student_image }}" alt="Profile Photo" class="profile-photo shadow-lg">
+                <!-- <img src="/media/{{ student_image }}" alt="Profile Photo" class="profile-photo shadow-lg"> -->
+                <img src="{% static 'photos/boy.avif' %}" alt="Default Profile Photo" class="profile-photo shadow-lg">
             {% else %}
-                <img src="/media/user.jpg" alt="Default Profile Photo" class="profile-photo shadow-lg">
+                <img src="/media/boy.avif" alt="Default Profile Photo" class="profile-photo shadow-lg">
             {% endif %}
         </div>
     </div>

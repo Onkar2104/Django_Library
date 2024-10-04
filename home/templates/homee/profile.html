@@ -93,9 +93,20 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
+              {% if full_name %}
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-house"></i> Home</a>
+              </li>
+              {% else %}
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-house"></i> Home</a>
                 </li>
+                {% endif %}
+                {% if full_name %}
+                <li class="nav-item">
+                  <a class="nav-link active" href="/myprofile/"><i class="fas fa-user"></i> My Profile</a>
+                </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-address-card"></i> About Us</a>
                 </li>

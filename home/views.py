@@ -109,6 +109,7 @@ def books(request, book_id=None):
 
         # Get list of IDs of books borrowed by the user
     borrowed_book_ids = Borrow.objects.filter(user=request.user).values_list('book_id', flat=True) if request.user.is_authenticated else []
+    borrowed_books_status = {borrow.book_id: borrow.user for borrow in Borrow.objects.filter(returned_date__isnull=True)}
 
     overdue_books = Borrow.objects.filter(user=request.user, returned_date__isnull=True)
     overdue_ids = [
@@ -183,6 +184,7 @@ def books(request, book_id=None):
         'student_image': student_image,
         'books': books_list,
         'borrowed_book_ids': borrowed_book_ids,
+        'borrowed_books_status': borrowed_books_status,
         'overdue_ids': overdue_ids,
         'newspapers': newspapers,
         'selected_newspaper': selected_newspaper,
