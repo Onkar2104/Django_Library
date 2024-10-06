@@ -12,6 +12,7 @@ from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils import timezone
 import requests
+from django.db.models import Q
 
 # Create your views here.
 
@@ -59,32 +60,29 @@ def books(request, book_id=None):
     newspapers = [
         {
             'name': 'Times of India',
-            'image_url': '/static/photos/times_of_india.png',  # Add a valid image path here
+            'image_url': '/static/photos/times_of_india.png', 
             'domain': 'timesofindia.indiatimes.com'
         },
         {
             'name': 'Loksatta',
-            'image_url': '/static/photos/loksatta.png',  # Add a valid image path here
+            'image_url': '/static/photos/loksatta.png',
             'domain': 'loksatta.com'
         },
         {
             'name': 'The Indian Express',
-            'image_url': '/static/photos/indian_express.png',  # Add a valid image path here
+            'image_url': '/static/photos/indian_express.png', 
             'domain': 'navbharattimes.indiatimes.com'
         },
     ]
 
-    # Initialize selected_newspaper to None by default
     selected_newspaper = None  
     news_articles = []
 
     if request.method == "GET":
         selected_newspaper = request.GET.get('newspaper', None)
 
-        # Fetch news from the selected newspaper if it is provided
         news_articles = fetch_news(source=selected_newspaper) if selected_newspaper else []
 
-        # Check if the request is an AJAX request
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'news_articles': news_articles})
 
@@ -114,7 +112,6 @@ def books(request, book_id=None):
         full_name = "Guest User"
         student_image = None
 
-        # Get list of IDs of books borrowed by the user
     borrowed_book_ids = Borrow.objects.filter(user=request.user).values_list('book_id', flat=True) if request.user.is_authenticated else []
     borrowed_books_status = {borrow.book_id: borrow.user for borrow in Borrow.objects.filter(returned_date__isnull=True)}
 
@@ -181,8 +178,29 @@ def books(request, book_id=None):
                 else:
                     messages.error(request, "You can’t return a book you haven’t borrowed, silly! 😜")
         
-
     books_list = Book.objects.all()
+    search_query = request.GET.get('search', '')
+    filter_type = request.GET.get('filter', 'all') 
+
+    # if request.GET.get('search'):
+    #     books_list = books_list.filter(title__icontains = request.GET.get('search'))
+        # newspapers = newspapers.filter(name__icontains = request.GET.get('search'))
+
+    if search_query:
+        # Filter books by title
+        books_list = books_list.filter(Q(title__icontains=search_query) | Q(author__icontains=search_query))
+        
+        # Filter newspapers using a list comprehension
+        newspapers = [paper for paper in newspapers if search_query.lower() in paper['name'].lower()]
+
+    if filter_type == 'books':
+        # Only display books
+        books_list = books_list  # Already fetching all books, this step is optional
+        newspapers = []
+
+    elif filter_type == 'newspaper':
+        books_list = []
+        newspapers = newspapers
 
     context = {
         'first_name': first_name,
@@ -198,6 +216,8 @@ def books(request, book_id=None):
         'newspapers': newspapers,
         'selected_newspaper': selected_newspaper,
         'news_articles': news_articles,
+        'search_query': search_query,
+        'filter_type': filter_type, 
     }
 
     return render(request, 'homee/BookSec.html', context)
