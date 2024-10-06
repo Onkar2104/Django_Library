@@ -41,7 +41,6 @@ class Book(models.Model):
     available_copies = models.IntegerField()
     book_image = models.ImageField(upload_to='books/', null=True, blank=True)
     borrowed_by = models.ManyToManyField(User, through='Borrow', related_name='borrowed_books')
-    fine_paid = models.BooleanField(default=False)
 
     def is_available(self):
         return self.available_copies > 0
