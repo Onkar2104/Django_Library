@@ -32,11 +32,11 @@ def fetch_news(source=None, language='en'):
     else:
         url = f'{base_url}language={language}&apiKey={api_key}'
 
-    print(f"Fetching news from: {url}")  # Debug log
+    # print(f"Fetching news from: {url}")  # Debug log
 
     response = requests.get(url)
-    print(f"API Response Code: {response.status_code}")  # Debug log
-    print(f"API Response Content: {response.content}")  # Debug log
+    # print(f"API Response Code: {response.status_code}")  # Debug log
+    # print(f"API Response Content: {response.content}")  # Debug log
 
     if response.status_code == 200:
         news_data = response.json()
@@ -66,12 +66,12 @@ def books(request, book_id=None):
         {
             'name': 'Loksatta',
             'image_url': '/static/photos/loksatta.png',
-            'domain': 'loksatta.com'
+            'domain': 'lokmat.com'
         },
         {
             'name': 'The Indian Express',
             'image_url': '/static/photos/indian_express.png', 
-            'domain': 'navbharattimes.indiatimes.com'
+            'domain': 'indianexpress.com'
         },
     ]
 
@@ -187,15 +187,12 @@ def books(request, book_id=None):
         # newspapers = newspapers.filter(name__icontains = request.GET.get('search'))
 
     if search_query:
-        # Filter books by title
         books_list = books_list.filter(Q(title__icontains=search_query) | Q(author__icontains=search_query))
         
-        # Filter newspapers using a list comprehension
         newspapers = [paper for paper in newspapers if search_query.lower() in paper['name'].lower()]
 
     if filter_type == 'books':
-        # Only display books
-        books_list = books_list  # Already fetching all books, this step is optional
+        books_list = books_list 
         newspapers = []
 
     elif filter_type == 'newspaper':

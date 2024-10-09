@@ -255,10 +255,10 @@ h1:hover {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    border-bottom: 10px dotted;
+    /* border-bottom: 10px dotted;
     border-left: 8px dotted;
     border-right: 8px dotted;
-    border-color: #ffafcc;
+    border-color: #ffafcc; */
 }
 
 ul {
@@ -278,7 +278,7 @@ ul p {
 
 ul p:hover {
     text-decoration: underline;
-    text-decoration-color: #fb6f92;
+    text-decoration-color: #D0CCF0;
 }
 
 
