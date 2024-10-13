@@ -177,6 +177,23 @@ def books(request, book_id=None):
                         messages.success(request, f'Thanks for returning "{book.title}" on time! 👏')
                 else:
                     messages.error(request, "You can’t return a book you haven’t borrowed, silly! 😜")
+
+            reminder_date = timezone.now().date() - timedelta(days=6)
+            borrows = Borrow.objects.filter(borrowed_date=reminder_date, returned_date__isnull=True)
+
+            for borrow in borrows:
+                user_email = user.email
+                book_title = borrow.book.title
+
+                send_mail(
+                    subject="Reminder: Return Your Book",
+                    message=f"Dear {first_name},\n\n"
+                            f"Please return the book '{book_title}' within the next day to avoid fines.",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[user_email],
+                )
+
+                # if borrow_record.borrowed_date 
         
     books_list = Book.objects.all()
     search_query = request.GET.get('search', '')
