@@ -217,6 +217,7 @@ def books(request, book_id=None):
         newspapers = newspapers
 
     context = {
+        'page': 'Books',
         'first_name': first_name,
         'last_name': last_name,
         'full_name': full_name,
@@ -320,8 +321,12 @@ def register(request):
 
         messages.success(request, "Account created successfully!")
         return redirect('/login/')
+    
+    context = {
+        'page': 'Register'
+    }
 
-    return render(request, 'register.html')
+    return render(request, 'register.html', context)
 
 
 @login_required(login_url="/login/")
@@ -356,6 +361,7 @@ def student_info(request):
         return redirect('/profile/')
     
     context = {
+        'page': 'Update Profile',
         'first_name': first_name,
         'last_name': last_name,
         'full_name': profile.full_name,
@@ -402,6 +408,7 @@ def my_profile(request):
         student_image = None
 
     context = {
+        'page': 'My Profile',
         'first_name': first_name,
         'last_name': last_name,
         'email': email,
