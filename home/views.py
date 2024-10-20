@@ -19,7 +19,7 @@ from django.db.models import Q
 User = get_user_model()
 
 def home_page(request):
-    context={'page':'BIT'}
+    context={'page':"The Scholar's Haven"}
     return render(request, 'homee/index.html', context)
 
 def fetch_news(source=None, language='en'):
