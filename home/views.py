@@ -23,29 +23,25 @@ def home_page(request):
     return render(request, 'homee/index.html', context)
 
 def fetch_news(source=None, language='en'):
-    api_key = 'NTIr1l-Avuroc_hwjRbiZgDNIpKLKmJCbw_EloVxa9BGk_jS'  # Replace with your valid Currents API key
+    api_key = 'NTIr1l-Avuroc_hwjRbiZgDNIpKLKmJCbw_EloVxa9BGk_jS' 
     base_url = 'https://api.currentsapi.services/v1/latest-news?'
 
-    # Construct the API URL based on the provided source
     if source:
         url = f'{base_url}domain={source}&apiKey={api_key}'
     else:
         url = f'{base_url}language={language}&apiKey={api_key}'
 
-    # print(f"Fetching news from: {url}")  # Debug log
 
     response = requests.get(url)
-    # print(f"API Response Code: {response.status_code}")  # Debug log
-    # print(f"API Response Content: {response.content}")  # Debug log
 
     if response.status_code == 200:
         news_data = response.json()
-        print("Raw news data:", news_data)  # Debug log
+        print("Raw news data:", news_data) 
 
         if 'news' in news_data:
-            return news_data['news']  # Return list of news articles
+            return news_data['news'] 
         else:
-            print("No 'news' key in the response.")  # Debug log
+            print("No 'news' key in the response.")  
             return []
     else:
         print("Failed to fetch news:", response.status_code, response.content)
