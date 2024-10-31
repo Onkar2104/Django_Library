@@ -35,8 +35,18 @@ class StudentProfile(models.Model):
         
 
 class Book(models.Model):
+
+    BRANCH_CHOICES = [
+        ('all', 'All'),
+        ('computer', 'Computer'),
+        ('entc', 'ENTC'),
+        ('mech', 'Mech'),
+        ('civil', 'Civil'),
+    ]
+
     title = models.CharField(max_length=50)
     author = models.CharField(max_length=50)
+    branch = models.CharField(max_length=20, choices=BRANCH_CHOICES, null=True, default='all')
     total_copies = models.IntegerField()
     available_copies = models.IntegerField()
     book_image = models.ImageField(upload_to='books/', null=True, blank=True)

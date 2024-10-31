@@ -120,6 +120,7 @@ def books(request, book_id=None):
         if 'add_book' in request.POST:
             title = request.POST.get('title')
             author = request.POST.get('author')
+            branch = request.POST.get('branch')
             total_copies = int(request.POST.get('total_copies', 0)) 
             book_image = request.FILES.get('book_image')  
 
@@ -130,6 +131,7 @@ def books(request, book_id=None):
             book = Book(
                 title=title, 
                 author=author, 
+                branch=branch,
                 total_copies=total_copies, 
                 available_copies=total_copies, 
                 book_image=book_image
@@ -212,6 +214,9 @@ def books(request, book_id=None):
         books_list = []
         newspapers = newspapers
 
+    student = StudentProfile.objects.get(user=request.user)  # Assuming the user is logged in
+    branch_books = Book.objects.filter(branch=student.select_branch)
+
     context = {
         'page': 'Books',
         'first_name': first_name,
@@ -229,6 +234,8 @@ def books(request, book_id=None):
         'news_articles': news_articles,
         'search_query': search_query,
         'filter_type': filter_type, 
+        'student': student,
+        'branch_books': branch_books,
     }
 
     return render(request, 'homee/BookSec.html', context)
