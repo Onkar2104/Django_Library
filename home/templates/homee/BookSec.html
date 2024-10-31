@@ -409,15 +409,20 @@
             <a href="?filter=all"
                 class="border-right border-primary border-5 rounded-2 nav-link {% if filter_type == 'all' %}active{% endif %}"><i
                     class="fa-solid fa-earth-americas"></i> All</a>
-            <a href="?filter=books"
+            <!-- <a href="?filter=books" -->
+            <a href="#books"
                 class="border-right border-primary border-5 rounded-2 nav-link {% if filter_type == 'books' %}active{% endif %}"><i
                     class="fas fa-book"></i> Books</a>
             <a href="#" class="border-right border-primary border-5 rounded-2"><i class="fas fa-book"></i> Journal</a>
-            <a href="?filter=newspaper"
+            <!-- <a href="?filter=newspaper" -->
+            <a href="#newspaper"
                 class="border-right border-primary border-5 rounded-2 nav-link {% if filter_type == 'newspaper' %}active{% endif %}"><i
                     class="fa-solid fa-newspaper"></i> News Paper</a>
-            <a href="#" class="border-right border-primary border-5 rounded-2"><i class="fa-solid fa-code-branch"></i>
+            {% if request.user.is_authenticated and not request.user.is_superuser%}
+            <a href="#branch" class="border-right border-primary border-5 rounded-2"><i
+                    class="fa-solid fa-code-branch"></i>
                 Branch</a>
+            {% endif %}
             <a href="#" class="border-right border-primary border-5 rounded-2"><i class="fa-solid fa-heart"></i>
                 Favourite</a>
             <a href="#" class="border-right border-primary border-5 rounded-2"><i class="fa-solid fa-cart-shopping"></i>
@@ -473,6 +478,37 @@
                                     <label for="bookAuthor">Author</label>
                                     <input type="text" class="form-control" id="bookAuthor" name="author" required>
                                 </div>
+                                <!-- <div class="form-group">
+                                    <label for="bookBranch">Branch</label>
+                                    <input type="text" class="form-control" id="bookAuthor" name="branch" required>
+                                </div> -->
+                                <div class="form-group">
+                                    <label class="form-label">Branch</label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="branch" id="all" value="all">
+                                        <label class="form-check-label" for="all">All</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="branch" id="computer"
+                                            value="computer">
+                                        <label class="form-check-label" for="computer">Computer</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="branch" id="entc"
+                                            value="entc">
+                                        <label class="form-check-label" for="entc">ENTC</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="branch" id="civil"
+                                            value="civil">
+                                        <label class="form-check-label" for="civil">Civil</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="branch" id="mach"
+                                            value="mach">
+                                        <label class="form-check-label" for="mach">Mechanics</label>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="totalCopies">Total Copies</label>
                                     <input type="number" class="form-control" id="totalCopies" name="total_copies"
@@ -524,7 +560,7 @@
             <hr class="border border-primary border-3 opacity-75">
 
 
-            <h3 class="text-center mt-5">Books <i class="fa-solid fa-book-open"></i></h3>
+            <h3 class="text-center mt-5" id="books">Books <i class="fa-solid fa-book-open"></i></h3>
             <div class="row mt-4">
 
                 {% for book in books %}
@@ -564,6 +600,56 @@
                     </div>
                 </div>
                 {% endfor %}
+
+                <!-- </div> -->
+
+                {% if request.user.is_authenticated and not request.user.is_superuser %}
+
+                <h3 class="text-center mt-5" id="branch">Books for {{ student.select_branch }} Branch <i
+                        class="fa-solid fa-book-open"></i></h3>
+                <div class="row mt-4">
+
+                    {% for book in branch_books %}
+
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
+                        <div class="card card-custom shadow-lg" style="width: 100%;">
+                            <img src="{{ book.book_image.url }}" class="card-img-top" alt="{{ book.title }}"
+                                style="height: 280px; width: 100%; object-fit: contain;">
+                            <div class="card-body border-top border-primary">
+                                <h5 class="card-title">{{ book.title }}</h5>
+                                <p class="card-text">{{ book.author }}</p>
+
+                                {% if book.is_available %}
+                                <form method="post" action="{% url 'books_with_id' book.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="book_id" value="{{ book.id }}">
+                                    <button type="submit" name="borrow" class="btn btn-success w-100">Add to
+                                        Cart</button>
+                                </form>
+                                {% else %}
+                                {% if request.user.is_authenticated and book.id in borrowed_book_ids %}
+                                {% with book.borrow_set.first as borrow_record %}
+                                {% if borrow_record and borrow_record.calculate_fine > 0 %}
+                                <button class="btn btn-danger w-100" disabled>Pay Fine First</button>
+                                {% else %}
+                                <form method="post" action="{% url 'books_with_id' book.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="book_id" value="{{ book.id }}">
+                                    <button type="submit" name="return" class="btn btn-warning w-100">Return
+                                        Book</button>
+                                </form>
+                                {% endif %}
+                                {% endwith %}
+                                {% else %}
+                                <button class="btn btn-primary w-100">Out of Stock</button>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
 
 
@@ -650,7 +736,7 @@
             <hr class="border border-primary border-3 opacity-75">
 
             <div class="container mt-5">
-                <h3 class="text-center">Daily Newspapers <i class="fa-solid fa-newspaper"></i></h3>
+                <h3 class="text-center" id="newspaper">Daily Newspapers <i class="fa-solid fa-newspaper"></i></h3>
                 <div class="row mt-4">
                     <!-- Newspaper Card -->
                     {% for newspaper in newspapers %}
