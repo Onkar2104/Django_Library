@@ -321,6 +321,9 @@
                             {% if student_image %}
                             <img id="profile-image" src="/media/{{ student_image }}" alt="Profile Photo"
                                 class="profile-photo shadow-lg">
+                            {% else %}
+                            <img id="profile-image" src="{% static 'photos/user.jpg' %}" alt="Profile Photo"
+                                class="profile-photo shadow-lg">
                             {% endif %}
 
                             <!-- Default Avatar based on gender -->
@@ -391,10 +394,11 @@
                             <a class="nav-link {% if filter_type == 'newspaper' %}active{% endif %}"
                                 href="?filter=newspaper"><i class="fas fa-book"></i> News Paper</a>
                         </li>
+                        {% if request.user.is_authenticated and not request.user.is_superuser%}
                         <li class="nav-item">
-                            <a class="nav-link {% if filter_type == 'branch' %}active{% endif %}"
-                                href="?filter=branch"><i class="fa-solid fa-code-branch"></i> Branch</a>
+                            <a class="nav-link" href="#branch"><i class="fa-solid fa-code-branch"></i> Branch</a>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -603,8 +607,8 @@
 
                 <!-- </div> -->
 
-                {% if request.user.is_authenticated and not request.user.is_superuser %}
-
+                {% if request.user.is_authenticated and not request.user.is_superuser and student.select_branch %}
+                
                 <h3 class="text-center mt-5" id="branch">Books for {{ student.select_branch }} Branch <i
                         class="fa-solid fa-book-open"></i></h3>
                 <div class="row mt-4">
@@ -650,6 +654,33 @@
                     {% endfor %}
                 </div>
                 {% endif %}
+
+                <h3 class="text-center mt-5" id="branch">Your Borrowed Books <i
+                        class="fa-solid fa-book-open"></i></h3>
+                <div class="row mt-4">
+                    {% for book in books %}
+                {% if request.user.is_authenticated and book.id in borrowed_book_ids %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
+                        <div class="card card-custom shadow-lg" style="width: 100%;">
+                            <img src="{{ book.book_image.url }}" class="card-img-top" alt="{{ book.title }}"
+                                style="height: 280px; width: 100%; object-fit: contain;">
+                            <div class="card-body border-top border-primary">
+                                <h5 class="card-title">{{ book.title }}</h5>
+                                <p class="card-text">{{ book.author }}</p>
+
+                                <form method="post" action="{% url 'books_with_id' book.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" name="return" class="btn btn-warning w-100">Return
+                                        Book</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                </div>
+                
             </div>
 
 
