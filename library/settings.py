@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module='_distutils_hack')
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,9 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^*xpkus@3roof^bw-6$%i1ps84@1ml2f24-$y40xrrbh!^iyp)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -144,3 +148,13 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'ijareonkar2184@gmail.com'
 EMAIL_HOST_PASSWORD = 'izom cvpb wgbv xgcw'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# settings.py
+# SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Ensure session data is stored in the database
+# SESSION_COOKIE_SECURE = False  # Set to False for local testing, True for production with HTTPS
+# SESSION_COOKIE_AGE = 15  # 2 weeks, adjust as necessary
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Keep session active after closing the browser
+
+# In settings.py
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

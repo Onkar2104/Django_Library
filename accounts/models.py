@@ -30,13 +30,14 @@ class CustomUserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, blank=False, null=False)
     first_name = models.CharField(max_length=15, blank=True, default='')
     last_name = models.CharField(max_length=15, blank=True, default='')
 
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+    is_guest = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(blank=True, null=True)

@@ -10,7 +10,8 @@ class ExistingAdminClass(admin.ModelAdmin):
 admin.site.register(StudentProfile, ExistingAdminClass)
 
 class ExistBooks(admin.ModelAdmin):
-    pass
+    search_fields = ['title', 'author', 'branch']
+    list_display = ('title', 'author', 'branch', 'total_copies', 'available_copies')
 admin.site.register(Book, ExistBooks)
 
 class ExistBorrow(admin.ModelAdmin):

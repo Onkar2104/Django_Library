@@ -19,8 +19,9 @@ from django.urls import path
 from home.views import *
 from django.conf import settings
 from django.conf.urls.static import static
-from home.views import ResetPasswordView
+from home.views import ResetPasswordView, custom_logout
 from django.contrib.auth import views as auth_views
+# from . import views
 
 urlpatterns = [
     # path('', index_page, name="index_page"),
@@ -28,6 +29,8 @@ urlpatterns = [
     path('books/<int:book_id>/', books, name='books_with_id'),
     path('books/pay_fine/', books, name='pay_fine'),
     path('books/', books, name="books"),
+    path('guest-login/', guest_login, name='guest_login'),
+    path('logout/', custom_logout, name='logout'),
     path('login/', login_page, name="login_page"),
     path('register/', register, name="register"),
     path('logout/', logout_page, name="logout"),

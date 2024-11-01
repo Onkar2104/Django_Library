@@ -1,3 +1,5 @@
+import random
+import string
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
@@ -53,6 +55,9 @@ def fetch_news(source=None, language='en'):
 @login_required(login_url="/login/")
 def books(request, book_id=None):
 
+    # if not request.user.has_perm('required_permission_name'):
+    #     return redirect('register')
+
     newspapers = [
         {
             'name': 'Times of India',
@@ -87,6 +92,8 @@ def books(request, book_id=None):
         user = request.user
         first_name = user.first_name
         last_name = user.last_name
+        default_avatar = settings.STATIC_URL + 'photos/boy.avif'
+        gender = 'male'
 
         try:
             profile = StudentProfile.objects.get(user=user)
@@ -106,7 +113,8 @@ def books(request, book_id=None):
         first_name = "Guest"
         last_name = "guest"
         full_name = "Guest User"
-        student_image = None
+        student_image = settings.STATIC_URL + 'photos/user.jpg'
+        default_avatar = settings.STATIC_URL + 'photos/guest.avif'
 
     borrowed_book_ids = Borrow.objects.filter(user=request.user).values_list('book_id', flat=True) if request.user.is_authenticated else []
     borrowed_books_status = {borrow.book_id: borrow.user for borrow in Borrow.objects.filter(returned_date__isnull=True)}
@@ -214,8 +222,13 @@ def books(request, book_id=None):
         books_list = []
         newspapers = newspapers
 
-    student = StudentProfile.objects.get(user=request.user)  # Assuming the user is logged in
-    branch_books = Book.objects.filter(branch=student.select_branch)
+    try:
+        student = StudentProfile.objects.get(user=request.user)
+        branch_books = Book.objects.filter(branch=student.select_branch)
+    except StudentProfile.DoesNotExist:
+        student = None
+        branch_books = Book.objects.all()
+
 
     context = {
         'page': 'Books',
@@ -239,6 +252,45 @@ def books(request, book_id=None):
     }
 
     return render(request, 'homee/BookSec.html', context)
+
+def custom_logout(request):
+    user = request.user
+    if user.is_authenticated:
+        if getattr(user, 'is_guest', False):
+            print(f"Logging out user: {user.email}, ID: {user.id}")  # Debug logging
+            if user.id is not None:
+                try:
+                    user.delete()  # Attempt to delete the user
+                    print("Guest user deleted successfully.")
+                except ValueError as e:
+                    print(f"Error deleting user: {e}")  # Catch and log the error
+            else:
+                print("User cannot be deleted: ID is None")
+        logout(request)  # Log out the user
+    return redirect('home_page')
+
+def guest_login(request):
+    if not request.user.is_authenticated:
+        # guest_username = 'guest' + ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+        guest_username = 'guest_' + ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+        guest_email = guest_username + "@guest.com"  # Placeholder email
+        print(guest_email)
+
+        # Create a new guest user with the placeholder email
+        guest_user = User.objects.create_user(email=guest_email, password=None)
+        guest_user.is_guest = True
+        guest_user.is_active = True  # Optional: set guest user as inactive
+        guest_user.save()
+
+        if guest_user.id is not None:
+            login(request, guest_user)
+            print("Guest user created and logged in:", guest_user)
+        else:
+            print("User creation failed: ID is None")
+
+        login(request, guest_user)
+        print("Is authenticated:", request.user.is_authenticated)
+    return redirect('home_page')
 
 def login_page(request):
     if request.method == "POST":
