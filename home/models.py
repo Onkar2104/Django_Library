@@ -4,10 +4,6 @@ from django.conf import settings
 from datetime import timedelta
 from django.utils import timezone
 
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning, module='_distutils_hack')
-
-
 User = get_user_model()
 # Create your models here.
 
