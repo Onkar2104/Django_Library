@@ -13,10 +13,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning, module='_distutils_hack')
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^*xpkus@3roof^bw-6$%i1ps84@1ml2f24-$y40xrrbh!^iyp)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -155,6 +151,3 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # SESSION_COOKIE_AGE = 15  # 2 weeks, adjust as necessary
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Keep session active after closing the browser
 
-# In settings.py
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
