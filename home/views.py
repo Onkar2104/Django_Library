@@ -13,7 +13,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils import timezone
-import requests
+# import requests
 from django.db.models import Q
 
 # Create your views here.
@@ -34,7 +34,7 @@ def fetch_news(source=None, language='en'):
         url = f'{base_url}language={language}&apiKey={api_key}'
 
 
-    response = requests.get(url)
+    response = response.get(url)
 
     if response.status_code == 200:
         news_data = response.json()
