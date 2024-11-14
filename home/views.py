@@ -13,7 +13,6 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils import timezone
-# import requests
 from django.db.models import Q
 
 # Create your views here.
