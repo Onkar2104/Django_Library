@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
+import requests
 from .models import *
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
@@ -24,7 +25,7 @@ def home_page(request):
     return render(request, 'homee/index.html', context)
 
 def fetch_news(source=None, language='en'):
-    api_key = 'NTIr1l-Avuroc_hwjRbiZgDNIpKLKmJCbw_EloVxa9BGk_jS' 
+    api_key = 'Mbwe-jRAP_awuPU-_FIC9Tf_OU8kFqLHld0s9sYZEm7Iknu-' 
     base_url = 'https://api.currentsapi.services/v1/latest-news?'
 
     if source:
@@ -33,7 +34,7 @@ def fetch_news(source=None, language='en'):
         url = f'{base_url}language={language}&apiKey={api_key}'
 
 
-    response = response.get(url)
+    response = requests.get(url)
 
     if response.status_code == 200:
         news_data = response.json()
