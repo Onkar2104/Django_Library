@@ -57,6 +57,27 @@ class Book(models.Model):
     
     def __str__(self):
         return self.title
+
+
+class ReadOnline(models.Model):
+
+    BRANCH_CHOICES = [
+        ('all', 'All'),
+        ('computer', 'Computer'),
+        ('entc', 'ENTC'),
+        ('mech', 'Mech'),
+        ('civil', 'Civil'),
+    ]
+
+    title = models.CharField(max_length=50)
+    author = models.CharField(max_length=50)
+    branch = models.CharField(max_length=20, choices=BRANCH_CHOICES, null=True, default='all')
+    pdf_image = models.ImageField(upload_to='readonline/', null=True, blank=True)
+    book_pdf = models.FileField(upload_to='readonline/pdfs', null=True, blank=True)
+
+    def __str__(self):
+        return self.title
+    
     
 class Borrow(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
