@@ -116,6 +116,11 @@ def books(request, book_id=None):
         student_image = settings.STATIC_URL + 'photos/user.jpg'
         default_avatar = settings.STATIC_URL + 'photos/guest.avif'
 
+
+    borrowed_books = []
+    if request.user.is_authenticated:
+        # Check if the user has borrowed books
+        borrowed_books = Borrow.objects.filter(user=request.user).exists()
     borrowed_book_ids = Borrow.objects.filter(user=request.user).values_list('book_id', flat=True) if request.user.is_authenticated else []
     borrowed_books_status = {borrow.book_id: borrow.user for borrow in Borrow.objects.filter(returned_date__isnull=True)}
 
@@ -229,6 +234,38 @@ def books(request, book_id=None):
         student = None
         branch_books = Book.objects.all()
 
+    
+    #read online
+    if request.method == "POST":
+        if 'add_pdf' in request.POST:
+            title = request.POST.get('title')
+            author = request.POST.get('author')
+            branch = request.POST.get('branch')
+            pdf_image = request.FILES.get('pdf_image')
+            book_pdf = request.FILES.get('book_pdf')
+
+            if not title or not author or not book_pdf:
+                messages.error(request, "All Fields are required.")
+                return redirect('books')
+
+            pdf = ReadOnline(
+                title = title,
+                author = author,
+                branch = branch,
+                pdf_image = pdf_image,
+                book_pdf = book_pdf
+            )
+            try:
+                pdf.save()
+            except Exception as e:
+                messages.error(request, f"Error saving pdf: {str(e)}")
+
+            messages.success(request, f"{title} added successfully.!")
+            return redirect('books')
+        
+    bookpdf = ReadOnline.objects.all()
+
+
 
     context = {
         'page': 'Books',
@@ -249,9 +286,13 @@ def books(request, book_id=None):
         'filter_type': filter_type, 
         'student': student,
         'branch_books': branch_books,
+        'borrowed_books': borrowed_books,
+
+        'pdfs': bookpdf,
     }
 
     return render(request, 'homee/BookSec.html', context)
+
 
 def custom_logout(request):
     user = request.user

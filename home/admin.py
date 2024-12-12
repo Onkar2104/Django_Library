@@ -14,6 +14,11 @@ class ExistBooks(admin.ModelAdmin):
     list_display = ('title', 'author', 'branch', 'total_copies', 'available_copies')
 admin.site.register(Book, ExistBooks)
 
+class ExistPdf(admin.ModelAdmin):
+    search_fields = ['title', 'author', 'branch']
+    list_display = ('title', 'author', 'branch')
+admin.site.register(ReadOnline, ExistPdf)
+
 class ExistBorrow(admin.ModelAdmin):
     search_fields = ['book__title', 'user__first_name', 'user__last_name']
     list_display = ('book', 'get_user_full_name', 'user', 'borrowed_date', 'current_fine')
