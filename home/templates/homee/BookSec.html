@@ -166,6 +166,11 @@
         margin-top: 5px;
     }
 
+    .add{
+        display: flex;
+        gap: 10px;
+    }
+
     @media (max-width: 768px) {
         .sidebar {
             display: none;
@@ -429,7 +434,8 @@
             {% endif %}
             <a href="#" class="border-right border-primary border-5 rounded-2"><i class="fa-solid fa-heart"></i>
                 Favourite</a>
-            <a href="#cart" class="border-right border-primary border-5 rounded-2"><i class="fa-solid fa-cart-shopping"></i>
+            <a href="#cart" class="border-right border-primary border-5 rounded-2"><i
+                    class="fa-solid fa-cart-shopping"></i>
                 Cart</a>
             <a href="/myprofile/" class="border-right border-primary border-5 rounded-2"><i class="fas fa-user"></i> My
                 Profile</a>
@@ -454,6 +460,8 @@
                 {% endfor %}
             </div>
             {% endif %}
+            
+            <div class="add">
             {% if request.user.is_authenticated and request.user.is_superuser %}
             <div class="mb-5">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -461,6 +469,14 @@
                 </button>
             </div>
             {% endif %}
+            {% if request.user.is_authenticated and request.user.is_superuser %}
+            <div class="mb-5">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdro">
+                    Add PDF
+                </button>
+            </div>
+            {% endif %}
+            </div>
 
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -528,6 +544,75 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" name="add_book" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            
+
+            <div class="modal fade" id="staticBackdro" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Add New Book/Journal</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="bookTitle">Title</label>
+                                    <input type="text" class="form-control" id="bookTitle" name="title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bookAuthor">Author</label>
+                                    <input type="text" class="form-control" id="bookAuthor" name="author" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Branch</label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="branch" id="all" value="all">
+                                        <label class="form-check-label" for="all">All</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="branch" id="computer"
+                                            value="computer">
+                                        <label class="form-check-label" for="computer">Computer</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="branch" id="entc"
+                                            value="entc">
+                                        <label class="form-check-label" for="entc">ENTC</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="branch" id="civil"
+                                            value="civil">
+                                        <label class="form-check-label" for="civil">Civil</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="branch" id="mach"
+                                            value="mach">
+                                        <label class="form-check-label" for="mach">Mechanics</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bookImage">Book Image</label>
+                                    <input type="file" class="form-control-file" id="bookImage" name="pdf_image"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bookPdf">Book PDF</label>
+                                    <input type="file" class="form-control-file" id="bookPdf" name="book_pdf" required>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" name="add_pdf" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
                     </form>
@@ -608,7 +693,7 @@
                 <!-- </div> -->
 
                 {% if request.user.is_authenticated and not request.user.is_superuser and student.select_branch %}
-                
+
                 <h3 class="text-center mt-5" id="branch">Books for {{ student.select_branch }} Branch <i
                         class="fa-solid fa-book-open"></i></h3>
                 <div class="row mt-4">
@@ -655,11 +740,14 @@
                 </div>
                 {% endif %}
 
-                <h3 class="text-center mt-5" id="cart">Your Borrowed Books <i
-                        class="fa-solid fa-book-open"></i></h3>
+                {% if request.user.is_authenticated %}
+                {% if borrowed_books %}
+                <h3 class="text-center mt-5" id="cart">Your Borrowed Books <i class="fa-solid fa-book-open"></i></h3>
+                {% endif %}
+                {% endif %}
                 <div class="row mt-4">
                     {% for book in books %}
-                {% if request.user.is_authenticated and book.id in borrowed_book_ids %}
+                    {% if request.user.is_authenticated and book.id in borrowed_book_ids %}
                     <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
                         <div class="card card-custom shadow-lg" style="width: 100%;">
                             <img src="{{ book.book_image.url }}" class="card-img-top" alt="{{ book.title }}"
@@ -678,13 +766,36 @@
                         </div>
                     </div>
                     {% endif %}
-                {% endfor %}
+                    {% endfor %}
                 </div>
-                
-            </div>
+
+                <hr>
+
+                <h3 class="text-center mt-5" id="books">Online Read <i class="fa-solid fa-book-open"></i></h3>
+                <div class="row mt-4">
+
+                    {% for pdf in pdfs %}
+                    <!-- For mobile (col-12), tablet (col-sm-6), and larger screens -->
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
+                        <div class="card card-custom shadow-lg" style="width: 100%;"> <!-- Set width to 100% -->
+                            <img src="{{ pdf.pdf_image.url }}" class="card-img-top" alt="{{ pdf.title }}"
+                                style="height: 280px; width: 100%; object-fit: contain;">
+                            <div class="card-body border-top border-primary">
+                                <h5 class="card-title">{{ pdf.title }}</h5>
+                                <p class="card-text">{{ pdf.author }}</p>
+                            
+                            {% if pdf.book_pdf %}
+                            <a href="{{ pdf.book_pdf.url }}" target="_blank" class="btn btn-primary w-100">View PDF</a>
+                            {% endif %}
+                        </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
 
 
-            <!-- <div class="carousel-section">
+                <!-- <div class="carousel-section">
         <div class="carousel-section-header">
             <h2 class="home-h2">Welcome to Open Library</h2>
         </div>
@@ -763,7 +874,7 @@
     </div> -->
 
 
-            <!-- <hr class="border border-primary border-3 opacity-75">
+                <!-- <hr class="border border-primary border-3 opacity-75">
             <div class="container mt-5">
                 <h3>PDF</h3>
                 <img src="https://m.media-amazon.com/images/I/61gWiLbXQBL._AC_UF1000,1000_QL80_.jpg"> <a href="/static/pdf/BusinessCommunication.pdf">example</a>
@@ -771,99 +882,100 @@
 
 
 
-            <hr class="border border-primary border-3 opacity-75">
+                <hr class="border border-primary border-3 opacity-75">
 
-            <div class="container mt-5">
-                <h3 class="text-center" id="newspaper">Daily Newspapers <i class="fa-solid fa-newspaper"></i></h3>
-                <div class="row mt-4">
-                    <!-- Newspaper Card -->
-                    {% for newspaper in newspapers %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card newspaper-card" data-domain="{{ newspaper.domain }}">
-                            <img class="card-img-top" src="{{ newspaper.image_url }}" alt="{{ newspaper.name }} logo"
-                                style="height: 135px; object-fit: contain;">
-                            <div class="card-body text-center">
-                                <!-- <h5 class="card-title">{{ newspaper.name }}</h5> -->
+                <div class="container mt-5">
+                    <h3 class="text-center" id="newspaper">Daily Newspapers <i class="fa-solid fa-newspaper"></i></h3>
+                    <div class="row mt-4">
+                        <!-- Newspaper Card -->
+                        {% for newspaper in newspapers %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card newspaper-card" data-domain="{{ newspaper.domain }}">
+                                <img class="card-img-top" src="{{ newspaper.image_url }}"
+                                    alt="{{ newspaper.name }} logo" style="height: 135px; object-fit: contain;">
+                                <div class="card-body text-center">
+                                    <!-- <h5 class="card-title">{{ newspaper.name }}</h5> -->
+                                </div>
+                                <div class="mb-3 text-center">
+                                    <button class="btn btn-success" data-toggle="modal" data-target="#newsModal"
+                                        data-newspaper="{{ newspaper.domain }}">
+                                        Read {{ newspaper.name }}
+                                    </button>
+                                </div>
                             </div>
-                            <div class="mb-3 text-center">
-                                <button class="btn btn-success" data-toggle="modal" data-target="#newsModal"
-                                    data-newspaper="{{ newspaper.domain }}">
-                                    Read {{ newspaper.name }}
-                                </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Modal for displaying articles -->
+                <div class="modal fade" id="newsModal" tabindex="-1" role="dialog" aria-labelledby="newsModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="newsModalLabel">Articles</h5>
+                                <!-- Close Button with Icon -->
+                                <button type="button" class="btn-close btn-lg" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" id="newsModalBody">
+                                <p>Loading articles...</p>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
-            </div>
 
-            <!-- Modal for displaying articles -->
-            <div class="modal fade" id="newsModal" tabindex="-1" role="dialog" aria-labelledby="newsModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="newsModalLabel">Articles</h5>
-                            <!-- Close Button with Icon -->
-                            <button type="button" class="btn-close btn-lg" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body" id="newsModalBody">
-                            <p>Loading articles...</p>
-                        </div>
+                <footer>
+                    <div class="foot-panel">
+                        <ul>
+                            <p class="foot">BIT, BARSHI</p>
+                            <p>
+                                <i id="fot" class="fa-solid fa-house"></i>
+                                <a id="foot-home" href="https://bitbarshi.edu.in/index.html">HOME</a>
+                            </p>
+                            <p>
+                                <i class="fa-solid fa-location-dot"></i>
+                                <a
+                                    href="https://www.google.com/maps/place/JSPM's+Bhagwant+Institute+Of+Technology,+Barshi/@18.2636689,75.6934489,17z/data=!3m1!4b1!4m6!3m5!1s0x3bc4555f56165729:0x693d79bac2acdaa2!8m2!3d18.2636689!4d75.6960238!16s%2Fg%2F11c44ybjyd?entry=ttu">Bhagwant
+                                    Institute of Technology, Barshi<br>
+                                    Gate No.1242, Tadsaundane Road, <br>Latur-Kurduwadi Bypass, Barshi.<br>
+                                    Pincode :- 413411</a>
+                            </p>
+                            <p> <i class="fa-solid fa-phone"></i>
+                                <a href="tel:9420734956">123-909090</a>
+                            </p>
+                            <p> <i class="fa-solid fa-envelope"></i>
+                                <a href="mailto:admissions@bitbarshi.edu.in">admissions@bitbarshi.edu.in</a>
+                            </p>
+                        </ul>
+
+                        <ul>
+                            <p class="foot">Quick Links</p>
+                            <p><a href="https://bamua.digitaluniversity.ac/">Dr. BAMU</a></p>
+                            <p><a href="https://dbatu.ac.in/">Dr.Batu</a> </p>
+                            <p><a href="https://www.aicte-india.org/">AICTE</a> </p>
+                            <p><a href="https://www.dte.org.in/">DTE</a> </p>
+                            <p><a href="https://smallseotools.com/plagiarism-checker/">Code of Ethics (Plagiarism
+                                    Check)</a>
+                            </p>
+                        </ul>
+
+                        <ul>
+                            <p class="foot">Social Media</p>
+                            <p><i class="fa-brands fa-instagram"></i>
+                                <a href="https://www.instagram.com/jspm_bit_barshi_/">Instagram.com</a>
+                            </p>
+                            <p><i class="fa-brands fa-facebook"></i>
+                                <a
+                                    href="https://m.facebook.com/profile.php/?id=100011824980540&name=xhp_nt__fb__action__open_user">Facebook.com</a>
+                            </p>
+                            <p><i class="fa-brands fa-youtube"></i>
+                                <a href="https://www.youtube.com/watch?v=mo_KXfpBzcs">YouTube.com</a>
+                            </p>
+                        </ul>
                     </div>
-                </div>
-            </div>
-
-            <footer>
-                <div class="foot-panel">
-                    <ul>
-                        <p class="foot">BIT, BARSHI</p>
-                        <p>
-                            <i id="fot" class="fa-solid fa-house"></i>
-                            <a id="foot-home" href="https://bitbarshi.edu.in/index.html">HOME</a>
-                        </p>
-                        <p>
-                            <i class="fa-solid fa-location-dot"></i>
-                            <a
-                                href="https://www.google.com/maps/place/JSPM's+Bhagwant+Institute+Of+Technology,+Barshi/@18.2636689,75.6934489,17z/data=!3m1!4b1!4m6!3m5!1s0x3bc4555f56165729:0x693d79bac2acdaa2!8m2!3d18.2636689!4d75.6960238!16s%2Fg%2F11c44ybjyd?entry=ttu">Bhagwant
-                                Institute of Technology, Barshi<br>
-                                Gate No.1242, Tadsaundane Road, <br>Latur-Kurduwadi Bypass, Barshi.<br>
-                                Pincode :- 413411</a>
-                        </p>
-                        <p> <i class="fa-solid fa-phone"></i>
-                            <a href="tel:9420734956">123-909090</a>
-                        </p>
-                        <p> <i class="fa-solid fa-envelope"></i>
-                            <a href="mailto:admissions@bitbarshi.edu.in">admissions@bitbarshi.edu.in</a>
-                        </p>
-                    </ul>
-
-                    <ul>
-                        <p class="foot">Quick Links</p>
-                        <p><a href="https://bamua.digitaluniversity.ac/">Dr. BAMU</a></p>
-                        <p><a href="https://dbatu.ac.in/">Dr.Batu</a> </p>
-                        <p><a href="https://www.aicte-india.org/">AICTE</a> </p>
-                        <p><a href="https://www.dte.org.in/">DTE</a> </p>
-                        <p><a href="https://smallseotools.com/plagiarism-checker/">Code of Ethics (Plagiarism Check)</a>
-                        </p>
-                    </ul>
-
-                    <ul>
-                        <p class="foot">Social Media</p>
-                        <p><i class="fa-brands fa-instagram"></i>
-                            <a href="https://www.instagram.com/jspm_bit_barshi_/">Instagram.com</a>
-                        </p>
-                        <p><i class="fa-brands fa-facebook"></i>
-                            <a
-                                href="https://m.facebook.com/profile.php/?id=100011824980540&name=xhp_nt__fb__action__open_user">Facebook.com</a>
-                        </p>
-                        <p><i class="fa-brands fa-youtube"></i>
-                            <a href="https://www.youtube.com/watch?v=mo_KXfpBzcs">YouTube.com</a>
-                        </p>
-                    </ul>
-                </div>
-            </footer>
+                </footer>
 
 </body>
 
