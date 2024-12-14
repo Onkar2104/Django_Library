@@ -489,7 +489,7 @@ def student_info(request):
         profile.save()
 
         messages.success(request, 'Profile updated successfully!')
-        return redirect('/profile/')
+        return redirect('/myprofile/')
     
     context = {
         'page': 'Update Profile',
