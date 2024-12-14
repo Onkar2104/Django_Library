@@ -15,6 +15,7 @@ from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils import timezone
 from django.db.models import Q
+import random
 
 # Create your views here.
 
@@ -330,7 +331,7 @@ def guest_login(request):
             print("User creation failed: ID is None")
 
         login(request, guest_user)
-        print("Is authenticated:", request.user.is_authenticated)
+        # print("Is authenticated:", request.user.is_authenticated)
     return redirect('home_page')
 
 def login_page(request):
@@ -373,6 +374,7 @@ def register(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email').lower()
+
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
@@ -401,8 +403,8 @@ def register(request):
             password=password
         )
 
-        subject = "Welcome to Bit Library! 📚"
-        message = f"Hello {first_name},\n\nWelcome to BIT Library! We're glad to have you.\n\nAbout Bit Library: Bit Library is more than just a collection of books; it’s a gateway to knowledge, inspiration, and connection.\n\nOnline Access: Can’t make it to the physical library? No worries! Our online catalog is accessible 24/7.\n\nHappy reading, {first_name}! 📖\n\nWarm regards,\n\nJSPM's Bit Library."
+        subject = "Welcome to 'The Scholar's Haven' Library! 📚"
+        message = f"Hello {first_name},\n\nWelcome to The Scholar's Haven Library! We're glad to have you.\n\nAbout Scholar's Haven Library: The Scholar's Haven Library is more than just a collection of books; it’s a gateway to knowledge, inspiration, and connection.\n\nOnline Access: Can’t make it to the physical library? No worries! Our online catalog is accessible 24/7.\n\nHappy reading, {first_name}! 📖\n\nWarm regards,\n\nThe Scholar's Haven."
         
         from_email = settings.EMAIL_HOST_USER
         recipient_list = [email]
@@ -425,15 +427,47 @@ def register(request):
     return render(request, 'register.html', context)
 
 
+
 @login_required(login_url="/login/")
 def student_info(request):
     user = request.user
-    first_name = request.user.first_name
-    last_name = request.user.last_name
+    first_name = user.first_name
+    last_name = user.last_name
 
     profile, created = StudentProfile.objects.get_or_create(user=user)
 
+    if not profile.email_verified:
+        if not profile.otp: 
+            otp = random.randint(1000, 9999)
+            profile.otp = otp 
+            profile.save()
+
+        subject = "Email Verification for 'The Scholar's Haven'"
+        message = f"Hello {first_name},\n\nYour verification code is {profile.otp}.\n\nThank you!"
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = [user.email]
+
+        try:
+            send_mail(subject, message, from_email, recipient_list)
+            messages.success(request, "Verification code sent to your email.")
+        except Exception as e:
+            messages.warning(request, "Failed to send email. Please try again.")
+            print(f"Error sending email: {e}")
+
+
+
     if request.method == "POST":
+        if not profile.email_verified:
+            input_otp = request.POST.get('otp')
+            if str(profile.otp) == input_otp:
+                profile.email_verified = True 
+                profile.otp = None
+                profile.save()
+                messages.success(request, "Email successfully verified!")
+            else:
+                messages.error(request, "Invalid OTP. Please try again.")
+                return redirect('/profile/')
+            
         if request.user.is_authenticated and request.user.is_superuser:
             profile.full_name = request.POST.get('full_name')
             profile.student_image = request.FILES.get('student_image') if request.FILES.get('student_image') else profile.student_image
@@ -441,6 +475,7 @@ def student_info(request):
             profile.gender = request.POST.get('gender')
         else: 
             profile.full_name = request.POST.get('full_name')
+            profile.email_verification = request.POST.get('otp')
             profile.student_image = request.FILES.get('student_image') if request.FILES.get('student_image') else profile.student_image
             profile.phone = request.POST.get('phone')
             profile.gender = request.POST.get('gender')
@@ -468,7 +503,8 @@ def student_info(request):
         'select_branch': profile.select_branch,
         'pursuing_year': profile.pursuing_year,
         'books_obtained': profile.books_obtained,
-        'student_image': profile.student_image
+        'student_image': profile.student_image,
+        'email_verified': profile.email_verified,
     }
 
     return render(request, 'homee/profile.html', context)
