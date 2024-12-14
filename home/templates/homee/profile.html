@@ -2,17 +2,18 @@
 
 {% block start %}
 
-  <style>
-    body {
-      
-      background-image: url('https://cdn.pixabay.com/photo/2017/08/07/03/22/books-2599241_1280.jpg');
-    }
+<style>
+  body {
 
-    @media (max-width: 768px) {
-      body {
-        background-image: none; /* Remove the background image on mobile */
-      }
+    background-image: url('https://cdn.pixabay.com/photo/2017/08/07/03/22/books-2599241_1280.jpg');
+  }
+
+  @media (max-width: 768px) {
+    body {
+      background-image: none;
+      /* Remove the background image on mobile */
     }
+  }
 
   .profile-photo {
     width: 150px;
@@ -21,271 +22,293 @@
     border-radius: 50%;
     margin-bottom: 20px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    border: 4px solid #fff; 
-}
+    border: 4px solid #fff;
+  }
 
-.profile-container {
-  max-width: 900px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #f8f9fa; 
-  border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
+  .profile-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
 
-#profilePhoto {
-  margin-top: 10px;
-}
+  #profilePhoto {
+    margin-top: 10px;
+  }
 
-.profile-photo:hover{
-  cursor: pointer;
-}
+  .profile-photo:hover {
+    cursor: pointer;
+  }
 
-.form-control {
-  border-radius: 6px;
-}
+  .form-control {
+    border-radius: 6px;
+  }
 
-.profile-button {
-  background-color: #633978;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 6px;
-  transition: background-color 0.3s ease;
-}
+  .profile-button {
+    background-color: #633978;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+  }
 
-.profile-button:hover {
-  background-color: #682773;
-}
+  .profile-button:hover {
+    background-color: #682773;
+  }
 
 
-    .form-control:focus {
-      box-shadow: none;
-      border-color: #BA68C8;
-    }
+  .form-control:focus {
+    box-shadow: none;
+    border-color: #BA68C8;
+  }
 
-    .profile-button {
-      background-color: rgb(99, 39, 120);
-      border: none;
-      color: white;
-    }
+  .profile-button {
+    background-color: rgb(99, 39, 120);
+    border: none;
+    color: white;
+  }
 
-    .profile-button:hover {
-      background-color: #682773;
-    }
+  .profile-button:hover {
+    background-color: #682773;
+  }
 
-    .branch-section {
-      display: none;
-    }
-  </style>
+  .branch-section {
+    display: none;
+  }
+</style>
 </head>
+
 <body>
   <nav class="navbar sticky-top navbar-expand-lg t bg-info bg-gradient">
     <div class="container-fluid bg-info bg-gradient">
-        <div class="navbar-brand">
-            <img src="/static/photos/icon1.png" alt="Logo" width="60" height="50" class="d-inline-block align-text-top">
-        </div>
-        <a class="navbar-brand d-block text-center text-md-start" href="https://bitbarshi.edu.in/index.html">
-            <span class="d-none d-sm-inline fs-3">The Scholar's Haven Barshi</span>
-            <span class="d-inline d-sm-none fs-3">The Scholar's Haven</span>
-          </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-              {% if full_name %}
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href=" /"><i class="fa-solid fa-house"></i> Home</a>
-              </li>
-              {% else %}
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-house"></i> Home</a>
-                </li>
-                {% endif %}
-                {% if full_name %}
-                <li class="nav-item">
-                  <a class="nav-link active" href="/myprofile/"><i class="fas fa-user"></i> My Profile</a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="https://bitbarshi.edu.in/trust/index.html"><i class="fa-solid fa-address-card"></i> About Us</a>
-                </li>
+      <div class="navbar-brand">
+        <img src="/static/photos/icon1.png" alt="Logo" width="60" height="50" class="d-inline-block align-text-top">
+      </div>
+      <a class="navbar-brand d-block text-center text-md-start" href="https://bitbarshi.edu.in/index.html">
+        <span class="d-none d-sm-inline fs-3">The Scholar's Haven Barshi</span>
+        <span class="d-inline d-sm-none fs-3">The Scholar's Haven</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          {% if full_name %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href=" /"><i class="fa-solid fa-house"></i> Home</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="https://bitbarshi.edu.in/trust/index.html"><i
+                class="fa-solid fa-house"></i> Home</a>
+          </li>
+          {% endif %}
+          {% if full_name %}
+          <li class="nav-item">
+            <a class="nav-link active" href="/myprofile/"><i class="fas fa-user"></i> My Profile</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="https://bitbarshi.edu.in/trust/index.html"><i
+                class="fa-solid fa-address-card"></i> About Us</a>
+          </li>
 
-                {% if request.user.is_authenticated and request.user.is_superuser %}
-                <li class="nav-item">
-                  <a class="nav-link" href="/admin/"><i class="fa-solid fa-user-tie"></i> Admin</a>
-              </li>
-              {% endif %}
-                {% if request.user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout/"><i class="fa-solid fa-right-from-bracket"></i> Logout </a>
-                    </li>
-                {% else %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Login
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/login/">Student</a></li>
-                            <li><a class="dropdown-item" href="/admin/">Librarian</a></li>
-                        </ul>
-                    </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/register/">SignUp</a>
-                </li>
-                {% endif %}
+          {% if request.user.is_authenticated and request.user.is_superuser %}
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/"><i class="fa-solid fa-user-tie"></i> Admin</a>
+          </li>
+          {% endif %}
+          {% if request.user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="/logout/"><i class="fa-solid fa-right-from-bracket"></i> Logout </a>
+          </li>
+          {% else %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Login
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/login/">Student</a></li>
+              <li><a class="dropdown-item" href="/admin/">Librarian</a></li>
             </ul>
-        </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/register/">SignUp</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
     </div>
-</nav>
+  </nav>
   <div class="container profile-container bg-white p-4 rounded shadow">
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
 
       {% if messages %}
       {{ message.tags }}
-      <div class="alert alert-primary" role="alert">   
-          {% for message in messages %}
-          {{ message }}
-          {% endfor %}
+      <div class="alert alert-primary" role="alert">
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
       </div>
-       {% endif %}
+      {% endif %}
 
-    <div class="row">
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-    
-      <div class="col-md-3 text-center">
-        <div class="d-flex flex-column align-items-center">
-          {% if student_image %}
-          <img src="/media/{{ student_image }}" class="profile-photo" id="profilePhotoPreview" alt="Profile Photo">
-          {% else %}
-          <img src="/media/user.jpg" alt="Default Profile Photo" class="profile-photo shadow-lg">
-            {% endif %}
-          <label for="profilePhoto" class="form-label mt-2">Change Profile Photo</label>
-          {% if student_image%}
-          <input type="file" class="form-control" id="profilePhoto" name="student_image" onchange="previewProfilePhoto(event)">
-          {% else %}
-          <input type="file" class="form-control" id="profilePhoto" name="student_image" onchange="previewProfilePhoto(event)" required>
-          {% endif %}
-        </div>
-      </div>
-      
-      <div class="col-md-9">
-        <h4 class="mb-3">{{ first_name }} {{last_name}}</h4>
+      <div class="row">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
 
-
-       {% if request.user.is_authenticated and request.user.is_superuser %}
-          <div class="mb-3">
-            <label for="fullName" class="form-label">Full Name</label>
-            <input type="text" class="form-control" id="fullName" placeholder="First_name Middle_name Surname" name="full_name" value="{{ full_name }}" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="Enter your email" name="email" value="{{ email }}" readonly>
-        </div>
-      
-          <div class="mb-3">
-            <label for="phone" class="form-label">Phone Number</label>
-            <input type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" class="form-control" id="phone" placeholder="Enter your phone number" value="{{phone}}" name="phone" required>
-          </div>
-
-          <div class="mb-3">
-              <label class="form-label">Gender</label><br>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="gender" id="male" value="male">
-                  <label class="form-check-label" for="male">Male</label>
-              </div>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="gender" id="female" value="female">
-                  <label class="form-check-label" for="female">Female</label>
-              </div>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="gender" id="other" value="other">
-                  <label class="form-check-label" for="other">Other</label>
-              </div>
-          </div>
-
-          {% else %}
-          
-          <div class="mb-3">
-            <label for="fullName" class="form-label">Full Name</label>
-            <input type="text" class="form-control" id="fullName" placeholder="First_name Middle_name Surname" name="full_name" value="{{ full_name }}" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="Enter your email" name="email" value="{{ email }}" readonly>
-        </div>
-      
-          <div class="mb-3">
-            <label for="phone" class="form-label">Phone Number</label>
-            <input type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" class="form-control" id="phone" placeholder="Enter your phone number" value="{{phone}}" name="phone" required>
-          </div>
-
-          <div class="mb-3">
-              <label class="form-label">Gender</label><br>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="gender" id="male" value="male">
-                  <label class="form-check-label" for="male">Male</label>
-              </div>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="gender" id="female" value="female">
-                  <label class="form-check-label" for="female">Female</label>
-              </div>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="gender" id="other" value="other">
-                  <label class="form-check-label" for="other">Other</label>
-              </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Education Type</label><br>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="education_type" id="diploma" value="diploma" onclick="toggleBranches()">
-              <label class="form-check-label" for="diploma">Diploma</label>
-            </div>
-
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="education_type" id="degree" value="degree" onclick="toggleBranches()">
-              <label class="form-check-label" for="degree">Degree</label>
+          <div class="col-md-3 text-center">
+            <div class="d-flex flex-column align-items-center">
+              {% if student_image %}
+              <img src="/media/{{ student_image }}" class="profile-photo" id="profilePhotoPreview" alt="Profile Photo">
+              {% else %}
+              <img src="/media/user.jpg" alt="Default Profile Photo" class="profile-photo shadow-lg">
+              {% endif %}
+              <label for="profilePhoto" class="form-label mt-2">Change Profile Photo</label>
+              {% if student_image%}
+              <input type="file" class="form-control" id="profilePhoto" name="student_image"
+                onchange="previewProfilePhoto(event)">
+              {% else %}
+              <input type="file" class="form-control" id="profilePhoto" name="student_image"
+                onchange="previewProfilePhoto(event)" required>
+              {% endif %}
             </div>
           </div>
 
-          <div class="mb-3 branch-section" id="branchSection">
-            <label for="branch" class="form-label">Branch</label>
-            <select class="form-select" id="branch" name="select_branch" required>
-              <option value="" selected disabled>Select branch</option>
-            </select>
-          </div>
+          <div class="col-md-9">
+            <h4 class="mb-3">{{ first_name }} {{last_name}}</h4>
 
-          <div class="mb-3">
-            <label for="pursuingYear" class="form-label">Pursuing Year</label>
-            <input type="number" class="form-control" id="pursuingYear" min="1" max="4" name="pursuing_year" 
-            value="{{ profile.pursuing_year }}" required>
-          </div>
-          {% endif %}
-          
-          <div class="text-center">
-            {% if full_name %}
-            <a href="/myprofile/" class="btn btn-light">Back</a>
-            <!-- <a href="/myprofile/" class="btn btn-primary">Update</a> -->
-            <button type="submit" class="btn btn-success">Update</button>
+
+            {% if request.user.is_authenticated and request.user.is_superuser %}
+            <div class="mb-3">
+              <label for="fullName" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="fullName" placeholder="First_name Middle_name Surname"
+                name="full_name" value="{{ full_name }}" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="Enter your email" name="email"
+                value="{{ email }}" readonly>
+            </div>
+
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" class="form-control" id="phone"
+                placeholder="Enter your phone number" value="{{phone}}" name="phone" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Gender</label><br>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="male" value="male">
+                <label class="form-check-label" for="male">Male</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                <label class="form-check-label" for="female">Female</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="other" value="other">
+                <label class="form-check-label" for="other">Other</label>
+              </div>
+            </div>
+
             {% else %}
-            <button type="submit" class="btn btn-success">Update</button>
+
+            <div class="mb-3">
+              <label for="fullName" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="fullName" placeholder="First_name Middle_name Surname"
+                name="full_name" value="{{ full_name }}" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="Enter your email" name="email"
+                value="{{ email }}" readonly>
+            </div>
+
+            {% if not email_verified %}
+            <div class="mb-3">
+              <label for="otp" class="form-label">Verification Code</label>
+              <input type="otp" class="form-control" id="otp" placeholder="Enter Verification Code" name="otp" required>
+            </div>
             {% endif %}
-          </div>
+
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" class="form-control" id="phone"
+                placeholder="Enter your phone number" value="{{phone}}" name="phone" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Gender</label><br>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="male" value="male">
+                <label class="form-check-label" for="male">Male</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                <label class="form-check-label" for="female">Female</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="other" value="other">
+                <label class="form-check-label" for="other">Other</label>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Education Type</label><br>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="education_type" id="diploma" value="diploma"
+                  onclick="toggleBranches()">
+                <label class="form-check-label" for="diploma">Diploma</label>
+              </div>
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="education_type" id="degree" value="degree"
+                  onclick="toggleBranches()">
+                <label class="form-check-label" for="degree">Degree</label>
+              </div>
+            </div>
+
+            <div class="mb-3 branch-section" id="branchSection">
+              <label for="branch" class="form-label">Branch</label>
+              <select class="form-select" id="branch" name="select_branch" required>
+                <option value="" selected disabled>Select branch</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="pursuingYear" class="form-label">Pursuing Year</label>
+              <input type="number" class="form-control" id="pursuingYear" min="1" max="4" name="pursuing_year"
+                value="{{ profile.pursuing_year }}" required>
+            </div>
+            {% endif %}
+
+            <div class="text-center">
+              {% if full_name %}
+              <a href="/myprofile/" class="btn btn-light">Back</a>
+              <!-- <a href="/myprofile/" class="btn btn-primary">Update</a> -->
+              <button type="submit" class="btn btn-success">Update</button>
+              {% else %}
+              <button type="submit" class="btn btn-success">Update</button>
+              {% endif %}
+            </div>
         </form>
       </div>
-    </div>
+  </div>
   </div>
 
   <script>
-  
+
     function previewProfilePhoto(event) {
       const reader = new FileReader();
-      reader.onload = function(){
+      reader.onload = function () {
         const output = document.getElementById('profilePhotoPreview');
         output.src = reader.result;
       };
@@ -302,7 +325,7 @@
       const degreeChecked = document.getElementById('degree').checked;
       const branchSection = document.getElementById('branchSection');
 
-      
+
       branchSelect.innerHTML = '<option value="" disabled selected>Select branch</option>';
 
       let branches = [];
@@ -312,7 +335,7 @@
         branches = degreeBranches;
       }
 
-    
+
       branches.forEach(branch => {
         const option = document.createElement('option');
         option.value = branch.toLowerCase();

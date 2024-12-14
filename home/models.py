@@ -26,6 +26,8 @@ class StudentProfile(models.Model):
     select_branch = models.CharField(max_length=30, null=True, blank=True)
     pursuing_year = models.IntegerField(null=False, blank=False, default='1')
     books_obtained = models.TextField(null=True, blank=True)
+    otp = models.IntegerField(blank=True, null=True)
+    email_verified = models.BooleanField(default=False) 
 
     def __str__(self):
         if self.full_name:
