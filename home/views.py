@@ -576,3 +576,45 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
             user = self.request.user
             context['email'] = user.email
         return context
+    
+
+
+def show_books(request):
+    first_name = request.user.first_name
+    last_name = request.user.last_name
+
+    if request.user.is_authenticated:
+        profile = get_object_or_404(StudentProfile, user=request.user)
+
+    ##get profile##
+    profile_count = StudentProfile.objects.all()
+    user_count = profile_count.count()
+
+    ##physical books count##
+    available_books = Book.objects.all()
+    total_books = available_books.count()
+
+    ## digital books count##
+    read_online = ReadOnline.objects.all()
+    online_count = read_online.count()
+
+    ##Book Search## 
+    search_query = request.GET.get('search', '')
+    if search_query:
+        available_books = available_books.filter(Q(title__icontains=search_query) | Q(author__icontains=search_query))
+
+    
+    context = {
+        "page": "All Books",
+        "books": available_books,
+        "profile": profile,
+        "first_name": first_name,
+        "last_name": last_name,
+        "total_books": total_books,
+        "online_count": online_count,
+        "user_count": user_count,
+        "search_query": search_query,
+        "read_online": read_online,
+    }
+
+    return render(request, 'homee/books.html', context)
