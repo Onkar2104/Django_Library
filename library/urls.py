@@ -36,6 +36,7 @@ urlpatterns = [
     path('logout/', logout_page, name="logout"),
     path('profile/', student_info, name="student_info"),
     path('myprofile/', my_profile, name="my_profile"),
+    path('show_books/', show_books, name="show_books"),
 
     path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
     path('password-reset-confirm/<uidb64>/<token>/',
