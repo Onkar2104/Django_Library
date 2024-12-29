@@ -739,7 +739,8 @@
                     {% endfor %}
                 </div>
                 {% endif %}
-
+ 
+                <!-- Borrowed books  -->
                 {% if request.user.is_authenticated %}
                 {% if borrowed_books %}
                 <h3 class="text-center mt-5" id="cart">Your Borrowed Books <i class="fa-solid fa-book-open"></i></h3>

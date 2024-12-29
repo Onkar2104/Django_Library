@@ -38,6 +38,8 @@ urlpatterns = [
     path('myprofile/', my_profile, name="my_profile"),
     path('show_books/', show_books, name="show_books"),
 
+    # path('booksec2/', booksec2),
+
     path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
     path('password-reset-confirm/<uidb64>/<token>/',
          auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'),
