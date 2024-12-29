@@ -208,25 +208,30 @@ def books(request, book_id=None):
                 # if borrow_record.borrowed_date 
         
     books_list = Book.objects.all()
+    read = ReadOnline.objects.all()
     search_query = request.GET.get('search', '')
     filter_type = request.GET.get('filter', 'all') 
 
-    # if request.GET.get('search'):
-    #     books_list = books_list.filter(title__icontains = request.GET.get('search'))
-        # newspapers = newspapers.filter(name__icontains = request.GET.get('search'))
-
     if search_query:
         books_list = books_list.filter(Q(title__icontains=search_query) | Q(author__icontains=search_query))
+        read = read.filter(Q(title__icontains=search_query) | Q(author__icontains=search_query))
         
         newspapers = [paper for paper in newspapers if search_query.lower() in paper['name'].lower()]
 
     if filter_type == 'books':
         books_list = books_list 
         newspapers = []
+        read = []
 
     elif filter_type == 'newspaper':
         books_list = []
+        read = []
         newspapers = newspapers
+
+    elif filter_type == 'read':
+        book_title = []
+        read = read
+        newspapers = []
 
     try:
         student = StudentProfile.objects.get(user=request.user)
@@ -266,10 +271,25 @@ def books(request, book_id=None):
         
     bookpdf = ReadOnline.objects.all()
 
+    ##get profile##
+    profile_count = StudentProfile.objects.all()
+    user_count = profile_count.count()
+
+    ##physical books count##
+    available_books = Book.objects.all()
+    total_books = available_books.count()
+
+    ## digital books count##
+    read_online = ReadOnline.objects.all()
+    online_count = read_online.count()
+
 
 
     context = {
         'page': 'Books',
+        'user_count': user_count,
+        'total_books': total_books,
+        'online_count': online_count,
         'first_name': first_name,
         'last_name': last_name,
         'full_name': full_name,
@@ -277,6 +297,7 @@ def books(request, book_id=None):
         'default_avatar': default_avatar,
         'gender': gender,
         'books': books_list,
+        'read': read,
         'borrowed_book_ids': borrowed_book_ids,
         'borrowed_books_status': borrowed_books_status,
         'overdue_ids': overdue_ids,
@@ -292,7 +313,8 @@ def books(request, book_id=None):
         'pdfs': bookpdf,
     }
 
-    return render(request, 'homee/BookSec.html', context)
+    # return render(request, 'homee/BookSec.html', context)
+    return render(request, 'homee/BookSec2.html', context)
 
 
 def custom_logout(request):
@@ -618,3 +640,6 @@ def show_books(request):
     }
 
     return render(request, 'homee/books.html', context)
+
+# def booksec2(request):
+#     return render(request, 'homee/booksec2.html')
