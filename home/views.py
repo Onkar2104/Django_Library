@@ -641,5 +641,10 @@ def show_books(request):
 
     return render(request, 'homee/books.html', context)
 
-# def booksec2(request):
-#     return render(request, 'homee/booksec2.html')
+
+
+def chat(request):
+    return render(request, 'homee/chat.html')
+
+def room(request, room_name):
+    return render(request, 'homee/room.html', {"room_name": room_name})
