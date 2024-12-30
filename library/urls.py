@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from home.views import *
 from django.conf import settings
 from django.conf.urls.static import static
@@ -38,7 +38,7 @@ urlpatterns = [
     path('myprofile/', my_profile, name="my_profile"),
     path('show_books/', show_books, name="show_books"),
 
-    # path('booksec2/', booksec2),
+    path('chat/', include('home.urls')),
 
     path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
     path('password-reset-confirm/<uidb64>/<token>/',
