@@ -647,4 +647,11 @@ def chat(request):
     return render(request, 'homee/chat.html')
 
 def room(request, room_name):
+    user = request.user
+    email = request.user.email
+
+    context = {
+        'email': email,
+        'user': user,
+    }
     return render(request, 'homee/room.html', {"room_name": room_name})

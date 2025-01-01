@@ -18,8 +18,11 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
+            document.querySelector('#chat-log').value += (data.message + " " + data.sender_email + "\n");
         };
+
+        // console.log("User", email)
+        // console.log("Sender", sender_email)
 
         chatSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
