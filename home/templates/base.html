@@ -32,6 +32,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+
+    {% if messages %}
+<script>
+    const messages = [
+        {% for message in messages %}
+    {
+        text: "{{ message|escapejs }}",
+            tags: "{{ message.tags }}"
+    },
+    {% endfor %}
+    ];
+
+    // Call the function to display messages
+    displayNotifications(messages);
+</script>
+{% endif %}
+
 </body>
 
 
