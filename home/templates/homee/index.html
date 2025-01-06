@@ -67,7 +67,8 @@
         </nav>
     
         <div class="container mt-5 text-center">
-            <h1 class="h1 text-primary-emphasis">Welcome to The Scholar's Haven</h1> 
+            <h1 class="h1 text-primary-emphasis"><span id="element"></span></h1> 
+            <!-- <h1><span id="element"></span></h1> -->
         </div>
 
         <div class="content">
@@ -157,6 +158,14 @@
         </div> -->
     </footer>
     <!-- <script src="script.js"></script> -->
+
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script>
+        var typed = new Typed('#element', {
+            strings: ["Welcome to 'The Scholar's Haven' "],
+            typeSpeed: 20,
+        });
+    </script>
 
 
 {% endblock %}
