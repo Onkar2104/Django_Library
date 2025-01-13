@@ -54,10 +54,15 @@ jobs:
         ssh-keyscan -H 52.66.255.93 >> ~/.ssh/known_hosts  # Add EC2 instance to known hosts
         chmod 644 ~/.ssh/known_hosts
 
+    - name: Set up SSH key for GitHub Actions
+      run: |
+        echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
     - name: SSH into EC2 and pull latest code
       run: |
-        ssh ubuntu@52.66.255.93 << 'EOF'
-        cd /project/Django_Library  # Replace with your actual project path
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@52.66.255.93 << 'EOF'
+        cd project/Django_Library  # Replace with your actual project path
         git pull origin main   # Pull the latest code from the main branch
         sudo systemctl restart gunicorn  # Restart the application server to apply changes
         EOF
