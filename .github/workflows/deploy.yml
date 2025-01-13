@@ -36,7 +36,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest   # Use GitHub’s Ubuntu runner to execute the job
+    runs-on: ubuntu-24.04   # Use GitHub’s Ubuntu runner to execute the job
 
     steps:
     - name: Checkout code
