@@ -53,7 +53,7 @@ jobs:
     - name: SSH into EC2 and pull latest code
       run: |
         ssh ubuntu@52.66.255.93 << 'EOF'
-        cd /path/to/project/Django_Library  # Replace with your actual project path
+        cd project/Django_Library  # Replace with your actual project path
         git pull origin main   # Pull the latest code from the main branch
         sudo systemctl restart gunicorn  # Restart the application server to apply changes
         EOF
