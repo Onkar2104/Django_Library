@@ -314,7 +314,7 @@ def books(request, book_id=None):
     }
 
     # return render(request, 'homee/BookSec.html', context)
-    return render(request, 'homee/BookSec2.html', context)
+    return render(request, 'homee/booksec2.html', context)
 
 
 def custom_logout(request):
