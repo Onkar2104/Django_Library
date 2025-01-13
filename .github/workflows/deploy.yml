@@ -48,7 +48,7 @@ jobs:
     - name: Add EC2 to known_hosts
       run: |
         mkdir -p ~/.ssh
-        ssh-keyscan -H 52.66.255.93 >> ~/.ssh/known_hosts  # Add EC2 instance to known hosts
+        ssh-keyscan -H 52.66.255.93 >> ~/.ssh  # Add EC2 instance to known hosts
 
     - name: SSH into EC2 and pull latest code
       run: |
