@@ -655,3 +655,7 @@ def room(request, room_name):
         'user': user,
     }
     return render(request, 'homee/room.html', {"room_name": room_name})
+
+def health(request):
+    context = {'Page': "Health"}
+    return render(request, "homee/health.html", context)
