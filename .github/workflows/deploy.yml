@@ -1,3 +1,30 @@
+# name: Deploy to AWS EC2
+
+# on:
+#   push:
+#     branches:
+#       - main   # Trigger this workflow when pushing to the 'main' branch
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest   # Use GitHub’s Ubuntu runner to execute the job
+
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2   # This checks out the latest repository code
+
+#     - name: Set up SSH
+#       uses: webfactory/ssh-agent@v0.5.3   # This action sets up the SSH key for GitHub Actions
+#       with:
+#         ssh-private-key: ${{ secrets.AWS_SSH_KEY }}   # AWS_SSH_KEY is the secret storing your private SSH key
+
+#     - name: SSH into EC2 and pull latest code
+#       run: |
+#         ssh ubuntu@52.66.255.93 << 'EOF'
+#         cd project/Django_Library  # Replace with your actual project path
+#         git pull origin main   # Pull the latest code from the main branch
+#         sudo systemctl restart gunicorn  # Restart the application server to apply changes
+#         EOF
 name: Deploy to AWS EC2
 
 on:
@@ -18,10 +45,15 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.AWS_SSH_KEY }}   # AWS_SSH_KEY is the secret storing your private SSH key
 
+    - name: Add EC2 to known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H 52.66.255.93 >> ~/.ssh/known_hosts  # Add EC2 instance to known hosts
+
     - name: SSH into EC2 and pull latest code
       run: |
         ssh ubuntu@52.66.255.93 << 'EOF'
-        cd project/Django_Library  # Replace with your actual project path
+        cd /path/to/project/Django_Library  # Replace with your actual project path
         git pull origin main   # Pull the latest code from the main branch
         sudo systemctl restart gunicorn  # Restart the application server to apply changes
         EOF
