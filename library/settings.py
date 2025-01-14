@@ -34,6 +34,7 @@ AUTH_USER_MODEL = 'accounts.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'sslserver',
     'daphne',
     'channels',
     'django.contrib.admin',
