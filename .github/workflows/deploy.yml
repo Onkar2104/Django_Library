@@ -29,7 +29,7 @@ jobs:
       run: |
         ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@52.66.255.93 << 'EOF'
         # Navigate to project directory
-        cd /project/Django_Library  # Update with your project directory
+        cd project/Django_Library  # Update with your project directory
 
         # Pull the latest changes from the repository
         git pull origin main
@@ -49,4 +49,7 @@ jobs:
 
         # Restart Gunicorn to apply changes
         sudo systemctl restart gunicorn
+
+        # Restart Nginx (if required)
+        sudo systemctl restart nginx
         EOF
