@@ -27,7 +27,7 @@ jobs:
 
     - name: SSH into EC2 and deploy
       run: |
-        ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@52.66.255.93 << 'EOF'
+        # ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@52.66.255.93 << 'EOF'
         # Navigate to project directory
         cd project/Django_Library  # Update with your project directory
 
