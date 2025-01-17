@@ -23,18 +23,18 @@ This is a Django-based library management system that provides various functiona
 1. Clone the repository:
 
 ```bash
-  https://github.com/Onkar2104/Django_Library.git
+https://github.com/Onkar2104/Django_Library.git
 ```
 2. Navigate to the project folder:
 
 ```bash
-    cd Django_Library
+cd Django_Library
 ```
 
 3. Set up a virtual environment (optional but recommended):
 ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate  
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate  
 ```
 4. Install dependencies:
 ```bash
@@ -42,19 +42,19 @@ This is a Django-based library management system that provides various functiona
 ```
 5. Apply migrations:
 ```bash
-    python manage.py migrate
+python manage.py migrate
 ```
 6. Create a superuser to access the admin panel:
 ```bash
-    python manage.py createsuperuser
+python manage.py createsuperuser
 ```
 7. Run the development server:
 ```bash
-    python manage.py runserver
+python manage.py runserver
 ```
 8. Access the app in your browser at:
 ```bash
-    http://127.0.0.1:8000
+http://127.0.0.1:8000
 ```
 ## Live Demo
 
