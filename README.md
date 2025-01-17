@@ -38,7 +38,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 4. Install dependencies:
 ```bash
-    pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 5. Apply migrations:
 ```bash
@@ -58,13 +58,13 @@ http://127.0.0.1:8000
 ```
 ## Live Demo
 
-[The Scholar's Haven](`http://52.66.255.93/`)
+[The Scholar's Haven](http://52.66.255.93/)
 
 Visit the site.
 
 
 
-
+## Logo
 ![Logo](home/static/photos/logo3.png)
 
 
