@@ -1,5 +1,5 @@
 
-# Django Library Project
+# The Scholar's Haven
 This is a Django-based library management system that provides various functionalities such as managing student profiles, book collections, and newspapers. The project is built with Django, Python, and SQLite, with a focus on usability and performance.
 
 ### Features
