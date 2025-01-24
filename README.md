@@ -71,4 +71,4 @@ Visit the site.
 ## Screenshots
 
 ![App Screenshot](home/static/photos/Screenshot1.png)
-![Library Screenshot](home/static/photos/Screenshot12.png)
+![Library Screenshot](home/static/photos/Screenshot2.png)
