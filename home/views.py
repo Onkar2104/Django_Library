@@ -382,8 +382,10 @@ def login_page(request):
             except StudentProfile.DoesNotExist:
                 messages.error(request, "Student profile does not exist.")
                 return redirect('/profile/') 
+            
+    context = {'page': "Login"}
 
-    return render(request, 'login_page.html')
+    return render(request, 'login_page.html', context)
 
 def logout_page(request):
     logout(request)
@@ -393,57 +395,105 @@ def register(request):
     # User = get_user_model()
 
     if request.method == "POST":
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email').lower()
+        if 'send_otp' in request.POST:
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            email = request.POST.get('email').lower()       
 
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
+            password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
 
-        if not email:
-            messages.error(request, "Email is required.")
-            return redirect('/register/')
+            if not email:
+                messages.error(request, "Email is required.")
+                return redirect('/register/')
 
-        if password and confirm_password and password != confirm_password:
-            messages.error(request, "Passwords do not match.")
-            return redirect('/register/')
+            if password and confirm_password and password != confirm_password:
+                messages.error(request, "Passwords do not match.")
+                return redirect('/register/')
+            
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                messages.error(request, "" + "; ".join(e.messages))
+                return redirect('/register/')
+
+            if User.objects.filter(email=email).exists():
+                messages.error(request, "Email is already in use.")
+                return redirect('/register/')
+            
+
+            otp = random.randint(1000, 9999)
+            request.session['otp'] = otp
+            request.session['register_data'] = {
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'password': password,
+                'confirm_password': confirm_password,
+            }
+
+
+            subject = "Your Verification code for Scholar's Haven"
+            message = f"Hello {first_name},\nYour Verification code for Scholar's Haven {otp}"
+            from_email = settings.EMAIL_HOST_USER
+            recipient_list = [email]
+
+            try:
+                send_mail(subject, message, from_email, recipient_list)
+                messages.success(request, "Verification code sended to your mail")
+            except Exception as e:
+                messages.warning(request, "Unable to send Verification code to your mail.")
+
+                return redirect('/register/')
+            
+            return render(request, "register.html", {"step": "verify_otp"})
+
         
-        try:
-            validate_password(password)
-        except ValidationError as e:
-            messages.error(request, "" + "; ".join(e.messages))
-            return redirect('/register/')
+        elif 'verify_otp' in request.POST:
+            otp_input = request.POST.get('otp')
+            otp = request.session.get('otp')
+            register_data = request.session.get('register_data')
 
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "Email is already in use.")
-            return redirect('/register/')
+            if not register_data or not otp:
+                message.error(request, "Session expired.!")
 
-        user = User.objects.create_user(
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            password=password
-        )
+                return redirect('/register/')
+            
+            if str(otp_input) == str(otp):
+                user = User.objects.create_user(
+                    first_name=register_data['first_name'],
+                    last_name=register_data['last_name'],
+                    email=register_data['email'],
+                    password=register_data['password'],
+                )
 
-        subject = "Welcome to 'The Scholar's Haven' Library! 📚"
-        message = f"Hello {first_name},\n\nWelcome to The Scholar's Haven Library! We're glad to have you.\n\nAbout Scholar's Haven Library: The Scholar's Haven Library is more than just a collection of books; it’s a gateway to knowledge, inspiration, and connection.\n\nOnline Access: Can’t make it to the physical library? No worries! Our online catalog is accessible 24/7.\n\nHappy reading, {first_name}! 📖\n\nWarm regards,\n\nThe Scholar's Haven."
-        
-        from_email = settings.EMAIL_HOST_USER
-        recipient_list = [email]
+            # Clear session data
+                del request.session['otp']
+                del request.session['register_data']
 
-        try:
-            send_mail(subject, message, from_email, recipient_list)
-            messages.success(request, "Account created successfully! A welcome email has been sent.")
-        except Exception as e:
-            messages.warning(request, "Account created successfully, but email failed to send.")
+                messages.success(request, "Registration successful! Please log in.")
 
+                #welcome email
+                subject = "Welcome to 'EcoMart'! "
+                message = f"Hello {register_data['first_name']},\nWelcome to The Scholar's Haven! We're glad to have you.\n\nLast Name: {register_data['last_name']}\nEmail: {register_data['email']}\n\nWarm regards,\nScholar's Haven."
+                from_email = settings.EMAIL_HOST_USER
+                recipient_list = [register_data['email']]
 
+                try:
+                    send_mail(subject, message, from_email, recipient_list)
+                except Exception as e:
+                    messages.success("Account created successfully, but email failed to send.")
 
-        messages.success(request, "Account created successfully!")
-        return redirect('/login/')
+                return redirect('/login/')
+            
+            else:
+                messages.error(request, "Invalid OTP. Please try again.")
+                
+                return render(request, "register.html", {"step": "verify_otp"})
     
     context = {
-        'page': 'Register'
+        'page': 'Register',
+        'step': "register",
     }
 
     return render(request, 'register.html', context)
@@ -608,19 +658,15 @@ def show_books(request):
     if request.user.is_authenticated:
         profile = get_object_or_404(StudentProfile, user=request.user)
 
-    ##get profile##
     profile_count = StudentProfile.objects.all()
     user_count = profile_count.count()
 
-    ##physical books count##
     available_books = Book.objects.all()
     total_books = available_books.count()
 
-    ## digital books count##
     read_online = ReadOnline.objects.all()
     online_count = read_online.count()
 
-    ##Book Search## 
     search_query = request.GET.get('search', '')
     if search_query:
         available_books = available_books.filter(Q(title__icontains=search_query) | Q(author__icontains=search_query))
@@ -651,10 +697,11 @@ def room(request, room_name):
     email = request.user.email
 
     context = {
+        'page': "Chat Room",
         'email': email,
         'user': user,
     }
-    return render(request, 'homee/room.html', {"room_name": room_name})
+    return render(request, 'homee/room.html', {"room_name": room_name}, context)
 
 def health(request):
     context = {'Page': "Health"}

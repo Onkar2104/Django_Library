@@ -33,6 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, blank=False, null=False)
     first_name = models.CharField(max_length=15, blank=True, default='')
     last_name = models.CharField(max_length=15, blank=True, default='')
+    otp = models.IntegerField(blank=True, null=True)
 
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
