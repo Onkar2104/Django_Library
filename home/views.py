@@ -474,7 +474,7 @@ def register(request):
                 messages.success(request, "Registration successful! Please log in.")
 
                 #welcome email
-                subject = "Welcome to 'EcoMart'! "
+                subject = "Welcome to 'Scholar's Haven'! "
                 message = f"Hello {register_data['first_name']},\nWelcome to The Scholar's Haven! We're glad to have you.\n\nLast Name: {register_data['last_name']}\nEmail: {register_data['email']}\n\nWarm regards,\nScholar's Haven."
                 from_email = settings.EMAIL_HOST_USER
                 recipient_list = [register_data['email']]
