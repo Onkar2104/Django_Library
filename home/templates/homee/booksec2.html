@@ -245,7 +245,6 @@
                     <li class="nav-item">
                         <a href="#books" class="{% if filter_type == 'books' %}active{% endif %}">
                             <i class="la la-book"></i>
-                             <i class="fas fa-book"></i>
                             <p>Books</p>
                             <!-- <span class="badge badge-count">14</span> -->
                         </a>
@@ -639,7 +638,7 @@
         {% for message in messages %}
     {
         text: "{{ message|escapejs }}",
-            tags: "{{ message.tags }}"
+        tags: "{{ message.tags }}"
     },
     {% endfor %}
     ];
